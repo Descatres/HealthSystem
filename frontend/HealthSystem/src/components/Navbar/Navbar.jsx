@@ -6,15 +6,9 @@ function Navbar(props) {
         <>
             <nav className={classes.container}>
                 <ul className={classes.navbar}>
-                    <li>
-                        <a href="/user">Profile</a>
-                    </li>
-                    <li>
-                        <a href="/">HealthSystem</a>
-                    </li>
-                    <li>
-                        <a href="/login">Login</a>
-                    </li>
+                    <a href="/user">Profile</a>
+                    <a href="/">HealthSystem</a>
+                    <a href="/login">Login</a>
                 </ul>
             </nav>
         </>
