@@ -6,7 +6,7 @@ function Profile(props) {
         <>
             <div className={classes.container}>
                 <h1>Profile</h1>
-                <p>Welcome to the homepage!</p>
+                <p>This is the users profile page</p>
             </div>
         </>
     );

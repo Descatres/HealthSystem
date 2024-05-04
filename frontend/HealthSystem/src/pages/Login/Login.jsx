@@ -5,20 +5,35 @@ function Login(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLogin, setIsLogin] = useState(false);
+
+    const handleIsLogin = () => {
+        setIsLogin(!isLogin);
+    };
     return (
         <>
             <div className={classes.container}>
-                {(!isLogin && (
+                {isLogin ? (
                     <>
                         <h1>Login</h1>
                         <p>E-mail</p>
                         <p>Password</p>
                         <p>
                             Don&apos;t have an account?&nbsp;
-                            <a href="/register">Create one</a>
+                            <a onClick={handleIsLogin}>Create one</a>
                         </p>
                     </>
-                )) || <a href="/logout">Log out</a>}
+                ) : (
+                    <>
+                        <h1>Register</h1>
+                        <p>Username</p>
+                        <p>E-mail</p>
+                        <p>Password</p>
+                        <p>
+                            Already have an account?&nbsp;
+                            <a onClick={handleIsLogin}>Log in</a>
+                        </p>
+                    </>
+                )}
             </div>
         </>
     );
