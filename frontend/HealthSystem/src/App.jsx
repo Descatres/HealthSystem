@@ -1,10 +1,11 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Homepage from "./pages/Homepage/Homepage";
-// import Login from "./pages/Login/Login";
-// import User from "./pages/User/User";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
     return (
@@ -14,15 +15,15 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Homepage />} />
                 </Routes>
-                {/* <Routes>
+                <Routes>
                     <Route path="/login" element={<Login />} />
-                </Routes> */}
-                {/* <Routes>
-                    <Route path="/user" element={<User />} />
-                </Routes> */}
-                {/* <Routes>
-                    <Route path="/user" element={<User />} />
-                </Routes> */}
+                </Routes>
+                <Routes>
+                    <Route path="/register" element={<Register />} />
+                </Routes>
+                <Routes>
+                    <Route path="/profile" element={<Profile />} />
+                </Routes>
             </Router>
         </>
     );

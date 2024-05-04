@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+// import React, { useState, useEffect, useContext, useRef } from "react";
 import classes from "./Navbar.module.css";
 
-function Navbar(props) {
+function Navbar() {
     return (
         <>
             <nav className={classes.container}>
                 <ul className={classes.navbar}>
-                    <a href="/user">Profile</a>
+                    <a href="/profile">Profile</a>
                     <a href="/">HealthSystem</a>
                     <a href="/login">Login</a>
                 </ul>

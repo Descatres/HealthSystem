@@ -1,15 +1,15 @@
 // import React, { useState, useEffect, useContext, useRef } from "react";
-import classes from "./Homepage.module.css";
+import classes from "./Profile.module.css";
 
-function Homepage(props) {
+function Profile(props) {
     return (
         <>
             <div className={classes.container}>
-                <h1>Homepage</h1>
+                <h1>Profile</h1>
                 <p>Welcome to the homepage!</p>
             </div>
         </>
     );
 }
 
-export default Homepage;
+export default Profile;
