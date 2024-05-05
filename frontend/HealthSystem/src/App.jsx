@@ -4,20 +4,36 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Homepage from "./pages/Homepage/Homepage";
 import Login from "./pages/Login/Login";
-import Profile from "./pages/Profile/Profile";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [name, setName] = useState("foo");
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const handleLogin = () => {
         setIsLoggedIn(!isLoggedIn);
     };
+
+    const handleCreateAppointment = () => {
+        setIsCreateModalOpen(!isCreateModalOpen);
+    };
+
     return (
         <>
             <Router>
                 <Navbar isLoggedIn={isLoggedIn} handleLogin={handleLogin} />
                 <Routes>
-                    <Route path="/" element={<Homepage />} />
+                    <Route
+                        path="/"
+                        element={
+                            <Homepage
+                                name={name}
+                                isLoggedIn={isLoggedIn}
+                                isCreateModalOpen={isCreateModalOpen}
+                                handleCreateModal={handleCreateAppointment}
+                            />
+                        }
+                    />
                 </Routes>
                 <Routes>
                     <Route
@@ -30,9 +46,14 @@ function App() {
                         }
                     />
                 </Routes>
-                <Routes>
-                    <Route path="/profile" element={<Profile />} />
-                </Routes>
+                {/* <Routes>
+                    <Route
+                        path="/appointment"
+                        element={
+                            <Appointment />
+                        }
+                    />
+                </Routes> */}
             </Router>
         </>
     );

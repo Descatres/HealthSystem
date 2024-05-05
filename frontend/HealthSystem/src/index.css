@@ -15,11 +15,32 @@
 
 a {
     font-weight: 500;
-    /* color: #646cff; */
+    color: #7b9ded;
+    cursor: pointer;
     text-decoration: inherit;
 }
-a:hover {
-    color: #535bf2;
+/* a:hover {
+    color: rgba(108, 156, 239, 0.837);
+} */
+
+a:active {
+    color: rgba(108, 156, 239, 0.837);
+}
+
+button {
+    font-size: 1.5rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(108, 156, 239, 0.17);
+    border-radius: 0.6rem;
+    background-color: rgba(108, 156, 239, 0.043);
+    cursor: pointer;
+    color: #7b9ded;
+}
+
+button:active {
+    color: rgba(108, 156, 239, 0.837);
+    background-color: rgba(108, 156, 239, 0.011);
 }
 
 body {

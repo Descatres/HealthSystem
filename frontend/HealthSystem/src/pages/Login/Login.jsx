@@ -12,6 +12,7 @@ function Login(props) {
     return (
         <>
             <div className={classes.container}>
+                {!props.isLoggedIn && null}
                 {isLogin ? (
                     <>
                         <h1>Login</h1>

@@ -1,0 +1,16 @@
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    background-color: #191919;
+    border-radius: 30px;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.centered {
+    align-items: center;
+}

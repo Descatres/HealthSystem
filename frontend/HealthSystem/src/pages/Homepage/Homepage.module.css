@@ -1,7 +1,70 @@
 .container {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     flex-direction: column;
     height: calc(100% - 4rem);
+    gap: 0.5rem;
+    padding: 2rem;
+}
+
+.topContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex-direction: row;
+    padding: 0rem 1rem;
+}
+
+.subtitle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 4rem;
+    margin-top: 2rem;
+    margin-left: 1rem;
+}
+
+.appointment {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.line {
+    margin-top: 1rem;
+    width: 100%;
+    height: 1px;
+    background-color: rgb(174, 174, 174);
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+p {
+    font-size: 1.7rem;
+    font-weight: 400;
+}
+
+.big {
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-decoration: none;
+    color: rgb(209, 224, 251);
+}
+
+.big:active {
+    color: rgba(209, 224, 251, 0.853);
 }

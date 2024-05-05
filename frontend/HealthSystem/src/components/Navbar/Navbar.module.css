@@ -1,14 +1,23 @@
 .container {
     background-color: #1a1a1a;
-    color: white;
     width: 100vw;
 }
 .navbar {
-    background-color: #1a1a1a;
+    background-color: #191919;
     color: white;
     padding: 20px 40px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     flex-direction: row;
     width: 100%;
+}
+
+a {
+    font-size: 1.4rem;
+    text-decoration: none;
+}
+
+a:active {
+    background-color: #191919;
 }
