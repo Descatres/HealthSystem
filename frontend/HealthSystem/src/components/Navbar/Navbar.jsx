@@ -11,11 +11,13 @@ function Navbar(props) {
                         <img src={lgo2} alt="HealthSystem" />
                     </a>
                     {props.isLoggedIn ? (
-                        <a href="/logout" onClick={props.handleLogin}>
+                        <a href="/login" onClick={props.handleLogin}>
                             Logout
                         </a>
                     ) : (
-                        <a href="/login">Login</a>
+                        <a href="/login" onClick={props.handleLogin}>
+                            Login
+                        </a>
                     )}
                 </ul>
             </nav>

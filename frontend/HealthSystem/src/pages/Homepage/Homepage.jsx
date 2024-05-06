@@ -5,7 +5,12 @@ import CreateAppointment from "../../components/Modals/CreateAppointment/CreateA
 function Homepage(props) {
     return (
         <>
-            {props.isCreateModalOpen && <CreateAppointment />}
+            {props.isCreateModalOpen && (
+                <CreateAppointment
+                    createAppointmentModal={props.isCreateModalOpen}
+                    handleCreateAppointment={props.handleCreateAppointment}
+                />
+            )}
             <div className={classes.container}>
                 <div className={classes.topContainer}>
                     <div className={classes.subtitle}>

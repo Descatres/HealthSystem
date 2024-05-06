@@ -4,6 +4,7 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Homepage from "./pages/Homepage/Homepage";
 import Login from "./pages/Login/Login";
+// import CreateAppointment from "./components/Modals/CreateAppointment/CreateAppointment";
 
 function App() {
     const [name, setName] = useState("foo");
@@ -16,12 +17,19 @@ function App() {
 
     const handleCreateAppointment = () => {
         setIsCreateModalOpen(!isCreateModalOpen);
+        // if (isCreateModalOpen) {
+        console.log("Create appointment modal is open");
+        // }
     };
 
     return (
         <>
             <Router>
-                <Navbar isLoggedIn={isLoggedIn} handleLogin={handleLogin} />
+                <Navbar
+                    isLoggedIn={isLoggedIn}
+                    setIsLoggedIn={setIsLoggedIn}
+                    handleLogin={handleLogin}
+                />
                 <Routes>
                     <Route
                         path="/"
@@ -30,12 +38,13 @@ function App() {
                                 name={name}
                                 isLoggedIn={isLoggedIn}
                                 isCreateModalOpen={isCreateModalOpen}
-                                handleCreateModal={handleCreateAppointment}
+                                handleCreateAppointment={
+                                    handleCreateAppointment
+                                }
                             />
                         }
                     />
-                </Routes>
-                <Routes>
+
                     <Route
                         path="/login"
                         element={
@@ -45,15 +54,14 @@ function App() {
                             />
                         }
                     />
-                </Routes>
-                {/* <Routes>
+                    {/* <Routes>
                     <Route
                         path="/appointment"
                         element={
                             <Appointment />
                         }
-                    />
-                </Routes> */}
+                    /> */}
+                </Routes>
             </Router>
         </>
     );
