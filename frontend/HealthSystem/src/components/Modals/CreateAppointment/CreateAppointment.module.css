@@ -120,34 +120,22 @@
     }
 }
 
-.topCardContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: 0.5rem 0;
-    padding: 0rem 1.25rem;
-    width: calc(100% - 2.5rem);
-}
-
+.topCardContainer,
 .bottomCardContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 0rem 0.5rem 1rem 0rem;
-    padding: 0 1.25rem;
-    width: calc(100% - 2.5rem);
+    margin: 0.5rem 0;
 }
 
-.inputFile {
+.optionsContainer {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     flex-direction: row;
     width: 100%;
     height: 20%;
-    gap: 2rem;
 }
 
 @keyframes colorChangeError {
@@ -161,7 +149,6 @@
 }
 
 .errorText {
-    /* font-family: Poppins; */
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -180,7 +167,6 @@
 }
 
 .successText {
-    /* font-family: Poppins; */
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -189,8 +175,7 @@
 }
 
 .title {
-    color: #b7bab6;
-    /* font-family: Poppins; */
+    color: rgb(209, 224, 251);
     font-size: 28px;
     font-style: normal;
     font-weight: 700;
@@ -199,7 +184,6 @@
 
 .timeRemaining {
     color: #b7bab6;
-    /* font-family: Poppins; */
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
@@ -207,18 +191,30 @@
 }
 
 .subtitle {
-    color: #b7bab6;
-    /* font-family: Poppins; */
-    font-size: 24px;
+    color: rgb(209, 224, 251);
+    font-size: 22px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    padding-left: 1.5rem;
+}
+
+select {
+    width: 55%;
+    height: 2rem;
+    background: #191919;
+    border: 1px solid #b7bab6;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    color: #b7bab6;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding-left: 0.5rem;
 }
 
 p {
     color: #b7bab6;
-    /* font-family: Poppins; */
     font-size: 22px;
     font-style: normal;
     font-weight: 500;
@@ -227,7 +223,6 @@ p {
 
 label {
     color: #b7bab6;
-    /* font-family: Poppins; */
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
