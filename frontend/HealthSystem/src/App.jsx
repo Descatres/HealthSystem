@@ -4,7 +4,6 @@ import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
 import Homepage from "./pages/Homepage/Homepage";
 import Login from "./pages/Login/Login";
-// import CreateAppointment from "./components/Modals/CreateAppointment/CreateAppointment";
 
 function App() {
     const [name, setName] = useState("foo");
