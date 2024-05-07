@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./AppointmentsList.module.css";
 import Card from "../Card/Card";
 import Button from "../Buttons/Button";
