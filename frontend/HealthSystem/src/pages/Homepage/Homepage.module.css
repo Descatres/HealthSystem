@@ -3,18 +3,37 @@
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
-    height: calc(100% - 5.6rem);
+    height: 100%;
     gap: 0.5rem;
-    padding: 2rem;
+    padding: 0rem 2rem 2rem 2rem;
+    margin: 5rem 0rem 0rem 0rem;
+    width: 100vw;
 }
 
 .topContainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: calc(100vw - 4rem);
+    height: fit-content;
     flex-direction: row;
     padding: 0rem 1rem;
+    position: fixed;
+    background-color: #242424;
+    overflow: hidden;
+    height: 7.5rem;
+    z-index: 14;
+}
+
+.spliter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100vw - 4rem);
+    height: fit-content;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 12;
 }
 
 .subtitle {
@@ -22,16 +41,6 @@
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-}
-
-.content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    gap: 4rem;
-    margin-top: 2rem;
-    margin-left: 1rem;
 }
 
 .appointment {
@@ -42,10 +51,12 @@
 }
 
 .line {
-    margin-top: 1rem;
-    width: 100%;
+    position: fixed;
+    margin-top: 7.2rem;
+    width: calc(100vw - 4rem);
     height: 1px;
     background-color: rgb(174, 174, 174);
+    z-index: 15;
 }
 
 h1 {
@@ -58,13 +69,22 @@ p {
     font-weight: 400;
 }
 
-.big {
+button.normal {
+    font-size: 1.5rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(108, 156, 239, 0.17);
+    border-radius: 0.6rem;
+    background-color: rgba(108, 156, 239, 0.043);
+    cursor: pointer;
+    color: #7b9ded;
     font-size: 1.5rem;
     font-weight: 400;
     text-decoration: none;
     color: rgb(209, 224, 251);
 }
 
-.big:active {
-    color: rgba(209, 224, 251, 0.853);
+button.normal:active {
+    color: rgba(209, 224, 251, 0.942);
+    background-color: rgba(108, 156, 239, 0.011);
 }

@@ -1,0 +1,80 @@
+/* Primary Button */
+.primaryButton {
+    width: 9.375rem;
+    height: 46px;
+    padding: 0.25rem 12px;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(108, 156, 239, 0.17);
+    background-color: rgba(108, 156, 239, 0.043);
+}
+
+.primaryButton:disabled {
+    background-color: rgba(108, 156, 239, 0.043);
+}
+
+/* .primaryButton:active {
+    background-color: #7b9ded;
+} */
+
+.primaryText {
+    /* color: #7b9ded;
+     */
+    color: rgb(209, 224, 251);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.14px;
+}
+
+.smallPrimaryButton {
+    border-radius: 4px;
+    width: 80px;
+    height: 30px;
+}
+
+/*----------------------------------------------------------------------------------------------------------------------*/
+/* Secondary Button */
+
+.secondaryButton {
+    width: 9.375rem;
+    height: 46px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid #b7bab6;
+    background: rgba(183, 186, 182, 0.2);
+}
+
+.secondaryButton:active {
+    background-color: rgba(211, 211, 211, 0.566);
+}
+
+.secondaryButton:disabled {
+    background-color: rgba(183, 186, 182, 0.2);
+}
+
+.canceledText,
+.secondaryText {
+    color: #b7bab6;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.14px;
+}
+
+.canceledText {
+    font-size: 11.8px;
+}
+
+.smallSecondaryButton {
+    border-radius: 4px;
+    width: 80px;
+    height: 30px;
+}

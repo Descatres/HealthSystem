@@ -17,9 +17,6 @@ function App() {
 
     const handleCreateAppointment = () => {
         setIsCreateModalOpen(!isCreateModalOpen);
-        // if (isCreateModalOpen) {
-        console.log("Create appointment modal is open");
-        // }
     };
 
     return (

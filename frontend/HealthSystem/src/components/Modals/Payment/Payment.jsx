@@ -1,7 +1,7 @@
 import React, { useState, createRef, useEffect, useContext } from "react";
 // import axios from "axios";
-import classes from "./CreateAppointment.module.css";
-import Card from "../../Card/Card";
+import classes from "./Payment.module.css";
+import Card from "../../Cards/Card";
 
 function CreateAppointment(props) {
     const [errorMessage, setErrorMessage] = useState("");
@@ -43,7 +43,9 @@ function CreateAppointment(props) {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className={classes.headerContainer}>
-                            <div className={classes.title}>Appointment</div>
+                            <div className={classes.title}>
+                                Create appointment
+                            </div>
                         </div>
                         <div className={classes.topCardContainer}>
                             <Card>
@@ -59,14 +61,9 @@ function CreateAppointment(props) {
                         </div>
                         <div className={classes.subtitle}>Dates</div>
                         <div className={classes.buttonsContainer}>
-                            <button className={classes.normal}>
-                                Go to payment
-                            </button>
-                            <button
-                                className={classes.normal}
-                                onClick={props.handleCreateAppointment}
-                            >
-                                Cancel
+                            <button>Seguir para pagamento</button>
+                            <button onClick={props.handleCreateAppointment}>
+                                Cancelar
                             </button>
                         </div>
                     </div>

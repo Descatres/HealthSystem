@@ -1,7 +1,19 @@
 .container {
     background-color: #1a1a1a;
     width: 100vw;
+    position: fixed;
+    /* override everything below it */
+    z-index: 10000;
+    overflow: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
 .navbar {
     background-color: #191919;
     color: white;
