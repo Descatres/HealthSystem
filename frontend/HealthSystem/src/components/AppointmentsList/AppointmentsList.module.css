@@ -256,6 +256,8 @@
 .appointmentText {
     position: relative;
     overflow: hidden;
+    /* cursor to not change */
+    cursor: alias;
 }
 
 .appointmentText::before,
@@ -375,5 +377,5 @@
 }
 
 .scrollToTopButton:hover {
-    background-color: #2f3b57;
+    background-color: #303030;
 }
