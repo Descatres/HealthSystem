@@ -40,13 +40,7 @@ function AppointmentsList(props) {
 
     const handleOrderOptionClick = (option) => {
         props.tableData.current = props.tableData.current
-            .filter(
-                (row) =>
-                    row.organizer
-                        .toLowerCase()
-                        .includes(searchInput.toLowerCase()) ||
-                    row.name.toLowerCase().includes(searchInput.toLowerCase())
-            )
+            .filter((row) => row.organizer.toLowerCase().includes(""))
             .sort((a, b) => {
                 if (option === "Ascending Date") {
                     return new Date(a.date) - new Date(b.date);
