@@ -91,11 +91,126 @@ const appointmentsData = {
     ],
 };
 
+// const appointmentsData = [
+//         {
+//             id: 1,
+//             organizer: "Dr. Smith",
+//             name: "Annual Physical Examination",
+//             date: "2024-06-15T08:00:00Z",
+//             state: "Active",
+//         },
+//         {
+//             id: 2,
+//             organizer: "Dr. Johnson",
+//             name: "Dental Cleaning",
+//             date: "2024-06-20T10:30:00Z",
+//             state: "Active",
+//         },
+//         {
+//             id: 3,
+//             organizer: "Dr. Lee",
+//             name: "Eye Checkup",
+//             date: "2024-06-25T14:00:00Z",
+//             state: "Active",
+//         },
+//         {
+//             id: 4,
+//             organizer: "Dr. Patel",
+//             name: "Blood Test",
+//             date: "2024-07-02T09:30:00Z",
+//             state: "Active",
+//         },
+//         {
+//             id: 5,
+//             organizer: "Dr. Garcia",
+//             name: "Vaccination",
+//             date: "2024-07-10T11:00:00Z",
+//             state: "Active",
+//         },
+//         {
+//             id: 6,
+//             organizer: "Dr. Nguyen",
+//             name: "Cholesterol Screening",
+//             date: "2024-07-15T08:45:00Z",
+//             state: "Active",
+//         },
+//         {
+//             id: 7,
+//             organizer: "Dr. Martinez",
+//             name: "Bone Density Test",
+//             date: "2024-07-20T13:15:00Z",
+//             state: "Active",
+//         },
+//         {
+//             organizer: "Dr. Brown",
+//             name: "Heart Checkup",
+//             date: "2024-04-30T09:30:00Z",
+//             state: "Inactive",
+//         },
+//         {
+//             id: 9,
+//             organizer: "Dr. White",
+//             name: "Dermatology Consultation",
+//             date: "2024-05-05T14:00:00Z",
+//             state: "Inactive",
+//         },
+//         {
+//             id: 10,
+//             organizer: "Dr. Green",
+//             name: "Neurology Appointment",
+//             date: "2024-05-06T10:00:00Z",
+//             state: "Cancelled",
+//         },
+//         {
+//             id: 11,
+//             organizer: "Dr. Khan",
+//             name: "MRI Scan",
+//             date: "2024-08-15T11:30:00Z",
+//             state: "Cancelled",
+//         },
+//         {
+//             id: 12,
+//             organizer: "Dr. Wong",
+//             name: "Colonoscopy",
+//             date: "2024-08-20T13:45:00Z",
+//             state: "Cancelled",
+//         },
+//     ];
+
 function Homepage(props) {
-    const [originalData, setOriginalData] = useState([]);
+    const [filteredData, setFilteredData] = useState(appointmentsData.current);
+    const [searchInput, setSearchInput] = useState("");
+
+    const handleSearchInput = (word) => {
+        const wordsInput = word.target.value.toLowerCase();
+
+        setSearchInput(wordsInput); // Update search input state
+
+        if (wordsInput === "") {
+            setFilteredData(appointmentsData); // If input is empty, show all data
+        } else {
+            const filteredAppointments = appointmentsData.current.filter(
+                (appointmentFilter) => {
+                    const compName = appointmentFilter.name.toLowerCase();
+                    const compOrganizer =
+                        appointmentFilter.organizer.toLowerCase();
+                    const compDate = appointmentFilter.date.toLowerCase();
+                    return (
+                        compName.includes(wordsInput) ||
+                        compOrganizer.includes(wordsInput) ||
+                        compDate.includes(wordsInput)
+                    );
+                }
+            );
+
+            setFilteredData(filteredAppointments);
+        }
+    };
+
     useEffect(() => {
-        setOriginalData(appointmentsData.appointments);
-    }, []);
+        handleSearchInput({ target: { value: searchInput } });
+    }, [searchInput]);
+
     // const fetchData = async () => {
     //     try {
     //         const config = {
@@ -148,12 +263,14 @@ function Homepage(props) {
     // }, []);
     return (
         <>
-            {props.isCreateModalOpen && (
-                <CreateAppointment
-                    createAppointmentModal={props.isCreateModalOpen}
-                    handleCreateAppointment={props.handleCreateAppointment}
-                />
-            )}
+            <CreateAppointment
+                createAppointmentModal={props.isCreateModalOpen}
+                handleCreateAppointment={props.handleCreateAppointment}
+                closeCreateAppointment={props.closeCreateAppointment}
+                setCreateAppointmentModalOpen={
+                    props.setCreateAppointmentModalOpen
+                }
+            />
             <div className={classes.container}>
                 <div className={classes.topContainer}>
                     {/* <div style={{ "flex-direction": "row" }}> */}
@@ -185,8 +302,10 @@ function Homepage(props) {
                 <div className={classes.spliter}>
                     <div style={{ marginTop: "8.5rem" }} />
                     <AppointmentsList
-                        tableData={appointmentsData}
-                        originalData={originalData}
+                        // tableData={appointmentsData}
+                        searchInput={searchInput}
+                        handleSearchInput={handleSearchInput}
+                        tableData={filteredData}
                         disabled={true}
                     />
                 </div>

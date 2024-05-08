@@ -8,7 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 91;
+    z-index: 10000;
     backdrop-filter: blur(10px);
 }
 
@@ -26,6 +26,12 @@
     box-shadow: 0px 0px 26px rgba(0, 0, 0, 0.4);
     min-width: 35rem;
     max-height: 82vh;
+}
+
+@media (max-width: 570px) {
+    .createModal {
+        min-width: 30rem;
+    }
 }
 
 @media (max-height: 708px) {
@@ -114,39 +120,27 @@
     }
 }
 
-.topCardContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: 2rem 0;
-    padding: 1rem 1.25rem;
-    width: calc(100% - 2.5rem);
-}
-
+.topCardContainer,
 .bottomCardContainer {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     margin: 0.5rem 0;
-    padding: 0 1.25rem;
-    width: calc(100% - 2.5rem);
 }
 
-.inputFile {
+.optionsContainer {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     flex-direction: row;
     width: 100%;
     height: 20%;
-    gap: 2rem;
 }
 
 @keyframes colorChangeError {
     from {
-        color: #ffffff;
+        color: rgb(209, 224, 251);
     }
 
     to {
@@ -155,7 +149,9 @@
 }
 
 .errorText {
-    /* font-family: Poppins; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -174,7 +170,6 @@
 }
 
 .successText {
-    /* font-family: Poppins; */
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -183,8 +178,7 @@
 }
 
 .title {
-    color: #b7bab6;
-    /* font-family: Poppins; */
+    color: rgb(209, 224, 251);
     font-size: 28px;
     font-style: normal;
     font-weight: 700;
@@ -193,7 +187,6 @@
 
 .timeRemaining {
     color: #b7bab6;
-    /* font-family: Poppins; */
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
@@ -201,18 +194,30 @@
 }
 
 .subtitle {
-    color: #b7bab6;
-    /* font-family: Poppins; */
-    font-size: 24px;
+    color: rgb(209, 224, 251);
+    font-size: 22px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    padding-left: 1.5rem;
+}
+
+select {
+    width: 55%;
+    height: 2rem;
+    background: #191919;
+    border: 1px solid #b7bab6;
+    box-sizing: border-box;
+    border-radius: 0.5rem;
+    color: #b7bab6;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding-left: 0.5rem;
 }
 
 p {
     color: #b7bab6;
-    /* font-family: Poppins; */
     font-size: 22px;
     font-style: normal;
     font-weight: 500;
@@ -221,7 +226,6 @@ p {
 
 label {
     color: #b7bab6;
-    /* font-family: Poppins; */
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -236,4 +240,24 @@ label {
 
 ._ {
     display: none;
+}
+
+button.normal {
+    font-size: 1.5rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(108, 156, 239, 0.17);
+    border-radius: 0.6rem;
+    background-color: rgba(108, 156, 239, 0.043);
+    cursor: pointer;
+    color: #7b9ded;
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-decoration: none;
+    color: rgb(209, 224, 251);
+}
+
+button.normal:active {
+    color: rgba(209, 224, 251, 0.942);
+    background-color: rgba(108, 156, 239, 0.011);
 }

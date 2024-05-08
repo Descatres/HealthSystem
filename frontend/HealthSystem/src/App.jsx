@@ -18,6 +18,10 @@ function App() {
         setIsCreateModalOpen(!isCreateModalOpen);
     };
 
+    const closeCreateAppointment = () => {
+        setIsCreateModalOpen(false);
+    };
+
     return (
         <>
             <Router>
@@ -37,6 +41,10 @@ function App() {
                                 handleCreateAppointment={
                                     handleCreateAppointment
                                 }
+                                closeCreateAppointment={closeCreateAppointment}
+                                setCreateAppointmentModalOpen={
+                                    setIsCreateModalOpen
+                                }
                             />
                         }
                     />
@@ -50,13 +58,6 @@ function App() {
                             />
                         }
                     />
-                    {/* <Routes>
-                    <Route
-                        path="/appointment"
-                        element={
-                            <Appointment />
-                        }
-                    /> */}
                 </Routes>
             </Router>
         </>

@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 // import axios from "axios";
 import classes from "./CreateAppointment.module.css";
 import Card from "../../Card/Card";
+import Payment from "../Payment/Payment";
 
 function CreateAppointment(props) {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const [showDates, setShowDates] = useState(false);
     const [speciality, setSpeciality] = useState("");
     const [doctorName, setDoctorName] = useState("");
     const [appointmentDate, setAppointmentDate] = useState("");
-    const [showDates, setShowDates] = useState(false);
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
     useEffect(() => {
         // Clear the error message if the modal is closed
@@ -31,22 +33,41 @@ function CreateAppointment(props) {
 
     const handleSpecialityChange = (event) => {
         setSpeciality(event.target.value);
+        // props.setSpeciality(speciality);
         if (event.target.value !== "") setShowDates(true);
         else setShowDates(false);
     };
 
     const handleDoctorNameChange = (event) => {
         setDoctorName(event.target.value);
+        // props.setDoctorName(doctorName);
         // if (event.target.value !== "") setShowDates(true);
         // else setShowDates(false);
     };
 
     const handleAppointmentDateChange = (event) => {
         setAppointmentDate(event.target.value);
+        // props.setAppointmentDate(appointmentDate);
     };
+
+    const handlePaymentShow = () => {
+        if (speciality && appointmentDate) {
+            console.log("payment");
+            props.handleCreateAppointment();
+            setIsPaymentModalOpen(true);
+        } else {
+            setErrorMessage("Please select a speciality and date.");
+        }
+    };
+
+    const goBack = () => {
+        props.handleCreateAppointment();
+        setIsPaymentModalOpen(false);
+    };
+
     return (
         <div>
-            {props.createAppointmentModal && (
+            {props.createAppointmentModal ? (
                 <div
                     className={
                         props.createAppointmentModal
@@ -141,8 +162,16 @@ function CreateAppointment(props) {
                                 </Card>
                             </>
                         )}
+                        {errorMessage && (
+                            <div className={classes.errorText}>
+                                {errorMessage}
+                            </div>
+                        )}
                         <div className={classes.buttonsContainer}>
-                            <button className={classes.normal}>
+                            <button
+                                className={classes.normal}
+                                onClick={handlePaymentShow}
+                            >
                                 Go to payment
                             </button>
                             <button
@@ -154,6 +183,15 @@ function CreateAppointment(props) {
                         </div>
                     </div>
                 </div>
+            ) : (
+                <Payment
+                    isPaymentModalOpen={isPaymentModalOpen}
+                    goBack={goBack}
+                    handlePaymentShow={handlePaymentShow}
+                    speciality={speciality}
+                    doctorName={doctorName}
+                    appointmentDate={appointmentDate}
+                />
             )}
         </div>
     );

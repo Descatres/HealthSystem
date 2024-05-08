@@ -2,24 +2,17 @@ import React, { useEffect, useState } from "react";
 import classes from "./AppointmentsList.module.css";
 import Card from "../Card/Card";
 import Button from "../Buttons/Button";
+import Payment from "../Modals/Payment/Payment";
 // import { appointmentDetailsContext } from "../../../contexts/appointment-details";
 // import { ReloadHomepageContext } from "../../../contexts/reload-pages";
 
 const ORDER_OPTIONS = ["Descending Date", "Ascending Date", "Appointment"];
 
 function AppointmentsList(props) {
-    const [searchInput, setSearchInput] = useState("");
     const [selectedOrder, setSelectedOrder] = useState("Descending Date");
     const [identifier, setIdentifier] = useState(0);
     const [appointmentInfo, setappointmentInfo] = useState({});
     const [showScrollButton, setShowScrollButton] = useState(false);
-
-    // const {
-    //     setappointmentInfo,
-    //     appointmentDetailsVisible: visible,
-    //     setappointmentDetailsModalVisible: setModalVisible,
-    // } = useContext(appointmentDetailsContext);
-    // const { setReload } = useContext(ReloadHomepageContext);
 
     useEffect(() => {
         console.log("props.tableData.current1", props.tableData.current);
@@ -66,34 +59,6 @@ function AppointmentsList(props) {
         setSelectedOrder(option);
     };
 
-    const handleSearchInput = (word) => {
-        const wordsInput = word.target.value.toLowerCase();
-
-        setSearchInput(wordsInput);
-
-        if (wordsInput === "") {
-            // props.setTableData(props.originalData);
-            props.tableData.current = props.originalData;
-        } else {
-            const tableFilter = props.originalData.filter(
-                (appointmentFilter) => {
-                    const compName = appointmentFilter.name.toLowerCase();
-                    const compOrganizer =
-                        appointmentFilter.organizer.toLowerCase();
-                    const compDate = appointmentFilter.date.toLowerCase();
-                    return (
-                        compName.includes(wordsInput) ||
-                        compOrganizer.includes(wordsInput) ||
-                        compDate.includes(wordsInput)
-                    );
-                }
-            );
-
-            // props.setTableData(tableFilter);
-            props.tableData.current = tableFilter;
-        }
-    };
-
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -113,8 +78,8 @@ function AppointmentsList(props) {
                     <input
                         className={classes.buttonSearch}
                         placeholder="Pesquisar"
-                        value={searchInput}
-                        onChange={handleSearchInput}
+                        value={props.searchInput}
+                        onChange={props.handleSearchInput}
                     ></input>
                     <div className={classes.dropdown}>
                         <div className={classes.buttonDropdown}>
