@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import classes from "./AppointmentsList.module.css";
 import Card from "../Card/Card";
 import Button from "../Buttons/Button";
-import Payment from "../Modals/Payment/Payment";
+import Payment from "../Modals/CreateAppointment/Payment/Payment";
 // import { appointmentDetailsContext } from "../../../contexts/appointment-details";
 // import { ReloadHomepageContext } from "../../../contexts/reload-pages";
 

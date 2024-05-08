@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // import axios from "axios";
 import classes from "./CreateAppointment.module.css";
 import Card from "../../Card/Card";
-import Payment from "../Payment/Payment";
+import Payment from "./Payment/Payment";
 
 function CreateAppointment(props) {
     const [errorMessage, setErrorMessage] = useState("");
@@ -62,6 +62,10 @@ function CreateAppointment(props) {
 
     const goBack = () => {
         props.handleCreateAppointment();
+        setIsPaymentModalOpen(false);
+    };
+
+    const closePayment = () => {
         setIsPaymentModalOpen(false);
     };
 
@@ -148,14 +152,14 @@ function CreateAppointment(props) {
                                             <option value="">
                                                 Select date
                                             </option>
-                                            <option value="11/06/2024 09:00AM">
-                                                11/06/2024 09:00AM
+                                            <option value="11/06/2024 09:00">
+                                                11/06/2024 09:00
                                             </option>
-                                            <option value="12/06/2024 10:00AM">
-                                                12/06/2024 10:00AM
+                                            <option value="12/06/2024 10:00">
+                                                12/06/2024 10:00
                                             </option>
-                                            <option value="13/06/2024 11:00AM">
-                                                13/06/2024 11:00AM
+                                            <option value="13/06/2024 11:00">
+                                                13/06/2024 11:00
                                             </option>
                                         </select>
                                     </div>
@@ -187,6 +191,7 @@ function CreateAppointment(props) {
                 <Payment
                     isPaymentModalOpen={isPaymentModalOpen}
                     goBack={goBack}
+                    closePayment={closePayment}
                     handlePaymentShow={handlePaymentShow}
                     speciality={speciality}
                     doctorName={doctorName}

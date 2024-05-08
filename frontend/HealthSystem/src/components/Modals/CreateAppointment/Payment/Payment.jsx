@@ -1,7 +1,7 @@
 import React, { useState, createRef, useEffect, useContext } from "react";
 // import axios from "axios";
 import classes from "./Payment.module.css";
-import Card from "../../Card/Card";
+import Card from "../../../Card/Card";
 
 function Payment(props) {
     return (
@@ -12,7 +12,7 @@ function Payment(props) {
                         ? classes.creatModalOverlay
                         : classes._
                 }
-                onClick={props.goBack}
+                onClick={props.closePayment}
                 onDragOver={(e) => e.preventDefault()}
                 onDragEnter={(e) => e.preventDefault()}
             >
@@ -50,7 +50,12 @@ function Payment(props) {
                         </Card>
                     </div>
                     <div className={classes.buttonsContainer}>
-                        <button className={classes.normal}>Finish</button>
+                        <button
+                            className={classes.normal}
+                            onClick={props.closePayment}
+                        >
+                            Finish
+                        </button>
                         <button
                             className={classes.normal}
                             onClick={props.goBack}
