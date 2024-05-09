@@ -45,7 +45,10 @@ function Payment(props) {
                     <div className={classes.bottomCardContainer}>
                         <Card>
                             <div className={classes.optionsContainer}>
-                                <p>Date: {props.appointmentDate}</p>
+                                <p>
+                                    Date: {props.appointmentDay}{" "}
+                                    {props.appointmentHour}
+                                </p>
                             </div>
                         </Card>
                     </div>
