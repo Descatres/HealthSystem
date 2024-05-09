@@ -7,10 +7,12 @@ import Payment from "./Payment/Payment";
 function CreateAppointment(props) {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-    const [showDates, setShowDates] = useState(false);
+    const [showDays, setShowDays] = useState(false);
+    const [showHours, setShowHours] = useState(false);
     const [speciality, setSpeciality] = useState("");
     const [doctorName, setDoctorName] = useState("");
-    const [appointmentDate, setAppointmentDate] = useState("");
+    const [appointmentDay, setAppointmentDay] = useState("");
+    const [appointmentHour, setAppointmentHour] = useState("");
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
     useEffect(() => {
@@ -34,8 +36,15 @@ function CreateAppointment(props) {
     const handleSpecialityChange = (event) => {
         setSpeciality(event.target.value);
         // props.setSpeciality(speciality);
-        if (event.target.value !== "") setShowDates(true);
-        else setShowDates(false);
+        if (event.target.value !== "") setShowDays(true);
+        else setShowDays(false);
+    };
+
+    const handleDaysChange = (event) => {
+        setAppointmentDay(event.target.value);
+        // props.setAppointmentDate(appointmentDate);
+        if (event.target.value !== "") setShowHours(true);
+        else setShowHours(false);
     };
 
     const handleDoctorNameChange = (event) => {
@@ -45,13 +54,13 @@ function CreateAppointment(props) {
         // else setShowDates(false);
     };
 
-    const handleAppointmentDateChange = (event) => {
-        setAppointmentDate(event.target.value);
+    const handleHoursChange = (event) => {
+        setAppointmentHour(event.target.value);
         // props.setAppointmentDate(appointmentDate);
     };
 
     const handlePaymentShow = () => {
-        if (speciality && appointmentDate) {
+        if (speciality && appointmentDay) {
             console.log("payment");
             props.handleCreateAppointment();
             setIsPaymentModalOpen(true);
@@ -137,33 +146,55 @@ function CreateAppointment(props) {
                                 </div>
                             </Card>
                         </div>
-                        {showDates && (
+                        {showDays && (
                             <>
                                 <div className={classes.subtitle}>Dates</div>
                                 <Card>
                                     <div className={classes.optionsContainer}>
-                                        <p>Available dates</p>
+                                        <p>Select day</p>
                                         <select
-                                            value={appointmentDate}
-                                            onChange={
-                                                handleAppointmentDateChange
-                                            }
+                                            value={appointmentDay}
+                                            onChange={handleDaysChange}
                                         >
-                                            <option value="">
-                                                Select date
+                                            <option value="">Select day</option>
+                                            <option value="11/06/2024">
+                                                11/06/2024
                                             </option>
-                                            <option value="11/06/2024 09:00">
-                                                11/06/2024 09:00
+                                            <option value="12/06/2024">
+                                                12/06/2024
                                             </option>
-                                            <option value="12/06/2024 10:00">
-                                                12/06/2024 10:00
-                                            </option>
-                                            <option value="13/06/2024 11:00">
-                                                13/06/2024 11:00
+                                            <option value="13/06/2024">
+                                                13/06/2024
                                             </option>
                                         </select>
                                     </div>
                                 </Card>
+                                {showHours && (
+                                    <Card>
+                                        <div
+                                            className={classes.optionsContainer}
+                                        >
+                                            <p>Available hours</p>
+                                            <select
+                                                value={appointmentHour}
+                                                onChange={handleHoursChange}
+                                            >
+                                                <option value="">
+                                                    Select Time
+                                                </option>
+                                                <option value="09:00">
+                                                    09:00
+                                                </option>
+                                                <option value="13:00">
+                                                    13:00
+                                                </option>
+                                                <option value="14:00">
+                                                    14:00
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </Card>
+                                )}
                             </>
                         )}
                         {errorMessage && (
@@ -195,7 +226,7 @@ function CreateAppointment(props) {
                     handlePaymentShow={handlePaymentShow}
                     speciality={speciality}
                     doctorName={doctorName}
-                    appointmentDate={appointmentDate}
+                    appointmentDate={appointmentDay}
                 />
             )}
         </div>
