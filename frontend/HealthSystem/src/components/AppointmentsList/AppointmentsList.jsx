@@ -73,7 +73,7 @@ function AppointmentsList(props) {
             <div className={classes.header}>
                 <div className={classes.titleContainer}>
                     <div className={classes.title}>
-                        Informações da Competição
+                        Appointments Information
                     </div>
                 </div>
                 <div className={classes.buttonsContainer}>
