@@ -5,4 +5,32 @@
     flex-direction: column;
     height: calc(100% - 4rem);
     width: 100vw;
+    gap: 2rem;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 20rem;
+}
+
+button.normal {
+    font-size: 1.5rem;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(108, 156, 239, 0.17);
+    border-radius: 0.6rem;
+    background-color: rgba(108, 156, 239, 0.043);
+    cursor: pointer;
+    color: #7b9ded;
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-decoration: none;
+    color: rgb(209, 224, 251);
+}
+
+button.normal:active {
+    color: rgba(209, 224, 251, 0.942);
+    background-color: rgba(108, 156, 239, 0.011);
 }

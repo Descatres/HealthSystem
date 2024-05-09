@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect } from "react";
 import classes from "./Homepage.module.css";
 import CreateAppointment from "../../components/Modals/CreateAppointment/CreateAppointment";
 import AppointmentsList from "../../components/AppointmentsList/AppointmentsList";

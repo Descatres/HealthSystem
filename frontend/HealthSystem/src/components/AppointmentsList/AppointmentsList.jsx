@@ -6,10 +6,15 @@ import Payment from "../Modals/CreateAppointment/Payment/Payment";
 // import { appointmentDetailsContext } from "../../../contexts/appointment-details";
 // import { ReloadHomepageContext } from "../../../contexts/reload-pages";
 
-const ORDER_OPTIONS = ["Descending Date", "Ascending Date", "Appointment"];
+const ORDER_OPTIONS = [
+    "Default",
+    "Descending Date",
+    "Ascending Date",
+    "Appointment",
+];
 
 function AppointmentsList(props) {
-    const [selectedOrder, setSelectedOrder] = useState("Descending Date");
+    const [selectedOrder, setSelectedOrder] = useState("Default");
     const [identifier, setIdentifier] = useState(0);
     const [appointmentInfo, setappointmentInfo] = useState({});
     const [showScrollButton, setShowScrollButton] = useState(false);
@@ -46,8 +51,11 @@ function AppointmentsList(props) {
                     return new Date(a.date) - new Date(b.date);
                 } else if (option === "Appointment") {
                     return a.name.localeCompare(b.name);
-                } else {
+                } else if (option === "Descending Date") {
                     return new Date(b.date) - new Date(a.date);
+                } else {
+                    // use the original values - Descending dates without the cancelled ones
+                    return a.id - b.id;
                 }
             });
         setSelectedOrder(option);
