@@ -226,7 +226,8 @@ function CreateAppointment(props) {
                     handlePaymentShow={handlePaymentShow}
                     speciality={speciality}
                     doctorName={doctorName}
-                    appointmentDate={appointmentDay}
+                    appointmentDay={appointmentDay}
+                    appointmentHour={appointmentHour}
                 />
             )}
         </div>
