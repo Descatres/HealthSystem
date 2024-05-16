@@ -61,9 +61,12 @@ def jwt_verify(token, sk):
     return hmac.compare_digest(aux_signature.encode(), client_signature)
 
 def authenticate(email, password):
+    print(email, password)
     try:
         user = User.objects.get(email=email)
+        print(user.email, user.password) 
         if user.check_password(password):
+            print('user found')
             return user
     except User.DoesNotExist:
         return None
@@ -74,20 +77,19 @@ def login(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            username = data.get('email')
+            email = data.get('email')
             password = data.get('password')
         except ValueError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
         
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
+        # print(user)
         if user is not None:
-            # Generate JWT token
             expiration = '50000'
             userid = str(user.id)
-            userrole = 'user'  # Adjust as per your user role logic
+            userrole = 'user'
             token = jwt_creator(expiration, userid, userrole)
             
-            # Return JSON response with token
             return JsonResponse({'token': token}, status=200)
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=401)

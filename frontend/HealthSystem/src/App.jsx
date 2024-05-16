@@ -11,7 +11,7 @@ function App() {
 
     const handleLogin = (email, password) => {
         if (!isLoggedIn) {
-            fetch("http://localhost:8000/api/login/", {
+            fetch("http://localhost:8000/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
