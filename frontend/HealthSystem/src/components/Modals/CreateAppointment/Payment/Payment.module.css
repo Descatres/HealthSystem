@@ -165,7 +165,7 @@
     }
 
     to {
-        color: #00ff44;
+        color: rgb(103, 214, 103);
     }
 }
 
@@ -174,7 +174,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    animation: colorChangeSuccess 1s forwards;
+    animation: colorChangeSuccess 0.5s forwards;
 }
 
 .title {

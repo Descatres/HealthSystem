@@ -60,7 +60,7 @@ function CreateAppointment(props) {
     };
 
     const handlePaymentShow = () => {
-        if (speciality && appointmentDay) {
+        if (speciality && appointmentDay && appointmentHour) {
             console.log("payment");
             props.handleCreateAppointment();
             setIsPaymentModalOpen(true);
@@ -75,7 +75,10 @@ function CreateAppointment(props) {
     };
 
     const closePayment = () => {
-        setIsPaymentModalOpen(false);
+        // go back to the create appointment modal after 3 seconds
+        setTimeout(() => {
+            setIsPaymentModalOpen(false);
+        }, 2000);
     };
 
     return (
