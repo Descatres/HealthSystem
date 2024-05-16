@@ -1,3 +1,6 @@
-# created by virtualenv automatically
-*
-!rest\*
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
+rest/__pycache__/*
+restapp/__pycache__/*
