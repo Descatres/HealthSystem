@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import { useState } from "react";
 import classes from "./Login.module.css";
 
 function Login(props) {
@@ -31,11 +31,13 @@ function Login(props) {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
                     <button
                         className={classes.normal}
-                        onClick={() => props.login(email, password)}
+                        onClick={() => props.handleLogin(email, password)}
+                        required
                     >
                         Login
                     </button>

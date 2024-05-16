@@ -6,12 +6,38 @@ import Homepage from "./pages/Homepage/Homepage";
 import Login from "./pages/Login/Login";
 
 function App() {
-    const [name, setName] = useState("foo");
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-    const handleLogin = () => {
-        setIsLoggedIn(!isLoggedIn);
+    const handleLogin = (email, password) => {
+        if (!isLoggedIn) {
+            fetch("http://localhost:8000/api/login/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.token) {
+                        setIsLoggedIn(true);
+                        console.log("Logged in", data.token);
+                    } else {
+                        setIsLoggedIn(false);
+                        console.log("Failed to log in", data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.log("Error during login", error);
+                    setIsLoggedIn(false);
+                });
+        } else {
+            setIsLoggedIn(false);
+        }
     };
 
     const handleCreateAppointment = () => {
@@ -35,7 +61,6 @@ function App() {
                         path="/"
                         element={
                             <Homepage
-                                name={name}
                                 isLoggedIn={isLoggedIn}
                                 isCreateModalOpen={isCreateModalOpen}
                                 handleCreateAppointment={

@@ -276,7 +276,7 @@ function Homepage(props) {
                     {/* <div style={{ "flex-direction": "row" }}> */}
                     <div className={classes.subtitle}>
                         {props.isLoggedIn ? (
-                            <p>How are you today, {props.name}?</p>
+                            <p>How are you today?</p>
                         ) : (
                             <p>How are you today?</p>
                         )}

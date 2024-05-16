@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse,  JsonResponse
 import base64, re, json, hmac, hashlib, os
+from .models import User
 
 # generates secret key to be used in all encryptions
 secret_key = os.urandom(64)
@@ -58,10 +60,36 @@ def jwt_verify(token, sk):
 
     return hmac.compare_digest(aux_signature.encode(), client_signature)
 
+def authenticate(email, password):
+    try:
+        user = User.objects.get(email=email)
+        if user.check_password(password):
+            return user
+    except User.DoesNotExist:
+        return None
+    return None
 
-def teste(request):
-    return HttpResponse("Hello world!")
-
+@csrf_exempt
 def login(request):
-    print(request)
-    return "logged"
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('email')
+            password = data.get('password')
+        except ValueError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            # Generate JWT token
+            expiration = '50000'
+            userid = str(user.id)
+            userrole = 'user'  # Adjust as per your user role logic
+            token = jwt_creator(expiration, userid, userrole)
+            
+            # Return JSON response with token
+            return JsonResponse({'token': token}, status=200)
+        else:
+            return JsonResponse({'error': 'Invalid credentials'}, status=401)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
