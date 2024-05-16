@@ -1,6 +1,7 @@
 setup
 
 -   create python venv inside rest folder (from root: "py -3.11 -m venv rest" - MAKE SURE PYTHON 3.11 IS INSTALLED)
+-   cd .\rest
 -   .\Scripts\activate to activate venv in the console
 -   pip install -r requirements.txt
 -   here you can use django-admin commands, but none is needed for now
