@@ -57,7 +57,7 @@ function Payment(props) {
                             className={classes.normal}
                             onClick={props.closePayment}
                         >
-                            Finish
+                            Pay
                         </button>
                         <button
                             className={classes.normal}

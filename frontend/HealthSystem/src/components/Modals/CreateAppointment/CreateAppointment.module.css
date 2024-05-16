@@ -250,6 +250,7 @@ button.normal {
     border-radius: 0.6rem;
     background-color: rgba(108, 156, 239, 0.043);
     cursor: pointer;
+    min-width: 10rem;
     color: #7b9ded;
     font-size: 1.5rem;
     font-weight: 400;
@@ -260,4 +261,8 @@ button.normal {
 button.normal:active {
     color: rgba(209, 224, 251, 0.942);
     background-color: rgba(108, 156, 239, 0.011);
+}
+
+button.normal:hover {
+    color: rgba(209, 224, 251, 0.942);
 }
