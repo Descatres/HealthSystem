@@ -21,6 +21,6 @@ deploy
 
     -   rest django folder
     -   .ebtextensions
-    -   requirements.txt, manage.py and db.sqlite3 (although not needed)
+    -   requirements.txt, manage.py and db.sqlite3
 
 -   wait for helth ok :D
