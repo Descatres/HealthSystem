@@ -7,9 +7,15 @@ function Navbar(props) {
         <>
             <nav className={classes.container}>
                 <ul className={classes.navbar}>
-                    <a href="/">
-                        <img src={lgo2} alt="HealthSystem" />
-                    </a>
+                    {/* {!props.isLoggedIn ? (
+                        <a href="/"> */}
+                    <img src={lgo2} alt="HealthSystem" />
+                    {/* </a>
+                    ) : (
+                        <a href="/login">
+                            <img src={lgo2} alt="HealthSystem" />
+                        </a>
+                    )} */}
                     {props.isLoggedIn ? (
                         <a href="/login" onClick={props.handleLogin}>
                             Logout

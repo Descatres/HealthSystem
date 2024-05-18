@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import classes from "./Homepage.module.css";
 import CreateAppointment from "../../components/Modals/CreateAppointment/CreateAppointment";
 import AppointmentsList from "../../components/AppointmentsList/AppointmentsList";
+import { useNavigate } from "react-router-dom";
 
 const appointmentsData = {
     current: [
@@ -180,6 +181,7 @@ const appointmentsData = {
 function Homepage(props) {
     const [filteredData, setFilteredData] = useState(appointmentsData.current);
     const [searchInput, setSearchInput] = useState("");
+    const navigate = useNavigate();
 
     const handleSearchInput = (word) => {
         const wordsInput = word.target.value.toLowerCase();
@@ -210,6 +212,12 @@ function Homepage(props) {
     useEffect(() => {
         handleSearchInput({ target: { value: searchInput } });
     }, [searchInput]);
+
+    useEffect(() => {
+        if (!props.isLoggedIn) {
+            navigate("/login");
+        }
+    }, [props.isLoggedIn]);
 
     // const fetchData = async () => {
     //     try {

@@ -1,9 +1,25 @@
 import { useState } from "react";
 import classes from "./Login.module.css";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(props.isLoggedIn);
+        if (props.isLoggedIn) {
+            navigate("/");
+        }
+    }, [props.isLoggedIn]);
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            props.handleLogin(email, password);
+        }
+    };
 
     return (
         <>
@@ -31,6 +47,7 @@ function Login(props) {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={handleKeyDown}
                             required
                         />
                     </div>
