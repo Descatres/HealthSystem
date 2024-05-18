@@ -24,3 +24,18 @@ deploy
     -   requirements.txt, manage.py and db.sqlite3 (although not needed)
 
 -   wait for helth ok :D
+
+# To create users:
+
+-   start the venv as explained above;
+    -   run the server;
+-   open the shell `python manage.py shell`
+-   run the following code there:
+
+```python
+from restapp.models import User
+user = User(email = "test@mail.com")
+user.set_password("password")
+user.save()
+exit()
+```
