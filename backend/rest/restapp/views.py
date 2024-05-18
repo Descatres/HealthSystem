@@ -4,12 +4,13 @@ from django.http import HttpResponse,  JsonResponse
 import base64, re, json, hmac, hashlib, os
 from .models import User
 
+# TODO ------------
+import boto3
+import json
+# ------------
+
 # generates secret key to be used in all encryptions
 secret_key = os.urandom(64)
-
-"""
-    Base64 encoder and decoder for the JWT
-"""
 
 def decode_base64(data, altchars=b'+/'):
     data = re.sub(rb'[^a-zA-Z0-9%s]+' % altchars, b'', data)  # normalize
@@ -22,7 +23,6 @@ def base64url_encode(input):
     stringAsBytes = input.encode('ascii')
     stringAsBase64 = base64.urlsafe_b64encode(stringAsBytes).decode('utf-8').replace('=','')
     return stringAsBase64 
-
 
 """
     Parameters: expiration timestamp, user ID, userrole
@@ -46,7 +46,6 @@ def jwt_creator(expiration, userid, userrole):
     signature = hmac.new(secret_key, total_params.encode(), hashlib.sha1).hexdigest()
     token = total_params + '.' + str(base64url_encode(signature))
     return token
-
 
 """
     Parameters: JWT token, secret key
@@ -93,5 +92,70 @@ def login(request):
             return JsonResponse({'token': token}, status=200)
         else:
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+
+
+# TODO ------------
+
+# Initialize DynamoDB client
+dynamodb = boto3.resource('dynamodb', region_name='your-region')
+appointments_table = dynamodb.Table('Appointments')
+
+@csrf_exempt
+def create_appointment(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_id = data.get('user_id')
+            speciality = data.get('speciality')
+            doctor = data.get('doctor')
+            date = data.get('date')
+            time = data.get('time')
+
+            # Validate the user exists
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'User does not exist'}, status=404)
+
+            # Create appointment in DynamoDB
+            appointment_id = str(uuid.uuid4())
+            appointments_table.put_item(
+                Item={
+                    'appointment_id': appointment_id,
+                    'user_id': user_id,
+                    'speciality': speciality,
+                    'doctor': doctor,
+                    'date': date,
+                    'time': time
+                }
+            )
+            return JsonResponse({'message': 'Appointment created successfully'}, status=201)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def get_appointments(request, user_id):
+    if request.method == 'GET':
+        try:
+            # Validate the user exists
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'User does not exist'}, status=404)
+
+            # Retrieve appointments from DynamoDB
+            response = appointments_table.query(
+                IndexName='user_id-index',  # Assuming a secondary index on user_id
+                KeyConditionExpression=boto3.dynamodb.conditions.Key('user_id').eq(user_id)
+            )
+            appointments = response.get('Items', [])
+            return JsonResponse({'appointments': appointments}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
