@@ -6,7 +6,7 @@ import Homepage from "./pages/Homepage/Homepage";
 import Login from "./pages/Login/Login";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const handleLogin = (email, password) => {
