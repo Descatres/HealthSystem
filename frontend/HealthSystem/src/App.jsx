@@ -10,26 +10,44 @@ function App() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     // TODO
-    // async function createAppointment(appointmentData) {
-    //     const response = await fetch("http://backend-domain/appointments/", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(appointmentData),
+
+    // async function reserveAppointmentSlot(reservationData) {
+    //     const response = await fetch('http://localhost:8000/reserve/', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify(reservationData),
     //     });
 
     //     const data = await response.json();
     //     if (response.ok) {
-    //         console.log("Appointment created successfully:", data);
+    //       console.log('Slot reserved successfully:', data);
     //     } else {
-    //         console.error("Error creating appointment:", data);
+    //       console.error('Error reserving slot:', data);
     //     }
-    // }
+    //   }
+
+    //   async function createAppointment(appointmentData) {
+    //     const response = await fetch('http://localhost:8000/appointments/', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify(appointmentData),
+    //     });
+
+    //     const data = await response.json();
+    //     if (response.ok) {
+    //       console.log('Appointment created successfully:', data);
+    //     } else {
+    //       console.error('Error creating appointment:', data);
+    //     }
+    //   }
 
     // async function getAppointments(userId) {
     //     const response = await fetch(
-    //         `http://backend-domain/appointments/${userId}/`,
+    //         `http://localhost:8000/appointments/${userId}/`,
     //         {
     //             method: "GET",
     //         }
@@ -42,6 +60,17 @@ function App() {
     //         console.error("Error retrieving appointments:", data);
     //     }
     // }
+
+    //   const reservationData = {
+    //     user_id: 1,
+    //     doctor: 'Dr. Smith',
+    //     date: '2024-05-20',
+    //     time: '10:00',
+    //   }; // todo: get this data from the form
+    //   reserveAppointmentSlot(reservationData).then(() => {
+    //     const appointmentData = { ...reservationData, speciality: 'Cardiology' };
+    //     createAppointment(appointmentData);
+    //   });
 
     const handleLogin = (email, password) => {
         if (!isLoggedIn) {

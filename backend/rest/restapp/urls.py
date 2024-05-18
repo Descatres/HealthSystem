@@ -5,4 +5,5 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('appointments/', create_appointment, name='create_appointment'),
     path('appointments/<int:user_id>/', get_appointments, name='get_appointments'),
+    path('reserve/', reserve_appointment_slot, name='reserve_appointment_slot'),
 ]
