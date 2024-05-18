@@ -193,7 +193,11 @@ function AppointmentsList(props) {
                 ))}
             </div>
             <button
-                className={showScrollButton ? classes.scrollToTopButton : null}
+                className={
+                    showScrollButton
+                        ? classes.scrollToTopButton
+                        : classes.scrollToTopButton + null
+                }
                 onClick={scrollToTop}
             >
                 ↑

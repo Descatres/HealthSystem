@@ -9,6 +9,40 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
+    // TODO
+    // async function createAppointment(appointmentData) {
+    //     const response = await fetch("http://backend-domain/appointments/", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(appointmentData),
+    //     });
+
+    //     const data = await response.json();
+    //     if (response.ok) {
+    //         console.log("Appointment created successfully:", data);
+    //     } else {
+    //         console.error("Error creating appointment:", data);
+    //     }
+    // }
+
+    // async function getAppointments(userId) {
+    //     const response = await fetch(
+    //         `http://backend-domain/appointments/${userId}/`,
+    //         {
+    //             method: "GET",
+    //         }
+    //     );
+
+    //     const data = await response.json();
+    //     if (response.ok) {
+    //         console.log("Retrieved appointments:", data);
+    //     } else {
+    //         console.error("Error retrieving appointments:", data);
+    //     }
+    // }
+
     const handleLogin = (email, password) => {
         if (!isLoggedIn) {
             fetch("http://localhost:8000/login", {
