@@ -39,3 +39,18 @@ button.normal:active {
 button.normal:hover {
     color: rgba(209, 224, 251, 0.942);
 }
+
+.rememberContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 18.5%;
+    margin-top: -1.5rem;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.3rem;
+}

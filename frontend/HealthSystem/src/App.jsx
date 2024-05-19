@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar/Navbar";
@@ -72,6 +72,25 @@ function App() {
     //     createAppointment(appointmentData);
     //   });
 
+    useEffect(() => {
+        const checkLoginStatus = () => {
+            const loginTimestamp = localStorage.getItem("loginTimestamp");
+            if (loginTimestamp) {
+                const now = new Date().getTime();
+                const twentyFourHours = 24 * 60 * 60 * 1000;
+                if (now - parseInt(loginTimestamp) < twentyFourHours) {
+                    setIsLoggedIn(true);
+                }
+            }
+        };
+        checkLoginStatus();
+    }, []);
+
+    const setLoginTimestamp = () => {
+        const now = new Date();
+        localStorage.setItem("loginTimestamp", now.getTime());
+    };
+
     const handleLogin = (email, password) => {
         if (!isLoggedIn) {
             fetch("http://localhost:8000/login/", {
@@ -88,6 +107,7 @@ function App() {
                 .then((data) => {
                     if (data.token) {
                         setIsLoggedIn(true);
+                        setLoginTimestamp();
                         console.log("Logged in", data.token);
                     } else {
                         setIsLoggedIn(false);
@@ -100,6 +120,7 @@ function App() {
                 });
         } else {
             setIsLoggedIn(false);
+            localStorage.removeItem("loginTimestamp");
             console.log("Logged out");
         }
     };

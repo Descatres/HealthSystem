@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function Login(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -15,9 +16,33 @@ function Login(props) {
         }
     }, [props.isLoggedIn]);
 
+    useEffect(() => {
+        const savedEmail = localStorage.getItem("loginEmail");
+        const savedRememberMe = localStorage.getItem("rememberMe");
+
+        if (savedEmail && savedRememberMe === "true") {
+            setEmail(savedEmail);
+            setRememberMe(true);
+        }
+    }, []);
+
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             props.handleLogin(email, password);
+        }
+    };
+
+    const handleLogin = () => {
+        props.handleLogin(email, password);
+
+        // Save email and rememberMe status if rememberMe is checked
+        if (rememberMe) {
+            localStorage.setItem("loginEmail", email);
+            localStorage.setItem("rememberMe", true);
+        } else {
+            // Clear saved email and rememberMe status
+            localStorage.removeItem("loginEmail");
+            localStorage.removeItem("rememberMe");
         }
     };
 
@@ -51,9 +76,21 @@ function Login(props) {
                             required
                         />
                     </div>
+                    <div className={classes.rememberContainer}>
+                        <div className={classes.remember}>
+                            <input
+                                type="checkbox"
+                                checked={rememberMe}
+                                onChange={(e) =>
+                                    setRememberMe(e.target.checked)
+                                }
+                            />
+                            <div>Remember me</div>
+                        </div>
+                    </div>
                     <button
                         className={classes.normal}
-                        onClick={() => props.handleLogin(email, password)}
+                        onClick={handleLogin}
                         required
                     >
                         Login

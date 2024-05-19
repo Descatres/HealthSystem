@@ -126,6 +126,9 @@
     flex-direction: column;
     overflow-y: auto;
     max-height: 80%;
+    box-sizing: border-box;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .tableRowHeader {
