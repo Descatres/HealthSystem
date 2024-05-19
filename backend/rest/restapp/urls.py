@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login, create_appointment, get_appointments
+from .views import login, create_appointment, get_appointments, reserve_appointment_slot
 
 urlpatterns = [
     path('login/', login, name='login'),

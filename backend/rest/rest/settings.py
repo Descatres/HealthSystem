@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from boto3.session import Session
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -126,17 +127,33 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_REGION_NAME = 'your-region'  # e.g., 'us-west-2'
+
+# Initialize a session using Boto3
+session = Session(
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION_NAME
+)
+
+# DynamoDB Configuration
+dynamodb = session.resource('dynamodb')
+appointments_table = dynamodb.Table('Appointments')
+
+# ElastiCache Redis Configuration
+REDIS_HOST = 'your-elasticache-endpoint'  # Find this in your ElastiCache dashboard
+REDIS_PORT = 6379
+REDIS_DB = 0
+
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
 }
-
-# Add Redis connection settings if needed
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = 6379
-REDIS_DB = 1

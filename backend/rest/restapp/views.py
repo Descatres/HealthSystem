@@ -5,8 +5,11 @@ import base64, re, json, hmac, hashlib, os
 from .models import User
 
 # TODO ------------
-import boto3
 import json
+import boto3
+import redis
+import uuid
+from django.conf import settings
 # ------------
 
 # generates secret key to be used in all encryptions
@@ -99,9 +102,8 @@ def login(request):
 
 # TODO ------------
 
-# Initialize DynamoDB client
-dynamodb = boto3.resource('dynamodb', region_name='your-region')
-appointments_table = dynamodb.Table('Appointments')
+# Initialize Redis client
+redis_client = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 @csrf_exempt
 def create_appointment(request):
@@ -113,6 +115,14 @@ def create_appointment(request):
             doctor = data.get('doctor')
             date = data.get('date')
             time = data.get('time')
+            reservation_key = f"{date}_{time}_{doctor}"
+
+            # Check if the slot is reserved
+            if redis_client.exists(reservation_key):
+                return JsonResponse({'error': 'Slot already reserved'}, status=409)
+
+            # Reserve the slot for 60 seconds
+            redis_client.setex(reservation_key, 60, user_id)
 
             # Validate the user exists
             try:
@@ -122,7 +132,7 @@ def create_appointment(request):
 
             # Create appointment in DynamoDB
             appointment_id = str(uuid.uuid4())
-            appointments_table.put_item(
+            settings.appointments_table.put_item(
                 Item={
                     'appointment_id': appointment_id,
                     'user_id': user_id,
@@ -132,7 +142,32 @@ def create_appointment(request):
                     'time': time
                 }
             )
+            # Remove the reservation after successful creation
+            redis_client.delete(reservation_key)
             return JsonResponse({'message': 'Appointment created successfully'}, status=201)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def reserve_appointment_slot(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_id = data.get('user_id')
+            doctor = data.get('doctor')
+            date = data.get('date')
+            time = data.get('time')
+            reservation_key = f"{date}_{time}_{doctor}"
+
+            # Check if the slot is already reserved
+            if redis_client.exists(reservation_key):
+                return JsonResponse({'error': 'Slot already reserved'}, status=409)
+
+            # Reserve the slot for 60 seconds
+            redis_client.setex(reservation_key, 60, user_id)
+            return JsonResponse({'message': 'Slot reserved for 60 seconds'}, status=200)
         except ValueError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
     else:
@@ -149,7 +184,7 @@ def get_appointments(request, user_id):
                 return JsonResponse({'error': 'User does not exist'}, status=404)
 
             # Retrieve appointments from DynamoDB
-            response = appointments_table.query(
+            response = settings.appointments_table.query(
                 IndexName='user_id-index',  # Assuming a secondary index on user_id
                 KeyConditionExpression=boto3.dynamodb.conditions.Key('user_id').eq(user_id)
             )
