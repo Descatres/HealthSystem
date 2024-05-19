@@ -20,28 +20,51 @@ function AppointmentsList(props) {
     const [showScrollButton, setShowScrollButton] = useState(false);
 
     useEffect(() => {
-        console.log("props.tableData.current1", props.tableData.current);
-        if (props.tableData.current) {
-            console.log("props.tableData.current1", props.tableData.current);
-            setappointmentInfo(
-                props.tableData.current.find((row) => row.id === identifier)
+        const handleScroll = () => {
+            const scrollPosition =
+                document.documentElement.scrollTop || document.body.scrollTop;
+            const windowHeight = window.innerHeight;
+            const documentHeight = Math.max(
+                document.body.scrollHeight,
+                document.body.offsetHeight,
+                document.documentElement.clientHeight,
+                document.documentElement.scrollHeight,
+                document.documentElement.offsetHeight
             );
-        }
-    }, [identifier, props.tableData.current]);
+            const distanceFromBottom =
+                documentHeight - (scrollPosition + windowHeight);
+            const listHeight = document.querySelector(
+                `.${classes.table}`
+            ).offsetHeight;
+            const isNearTop = scrollPosition <= 50;
+            const shouldShowButton =
+                distanceFromBottom <= listHeight - 50 &&
+                !isNearTop &&
+                documentHeight > windowHeight;
+            setShowScrollButton(shouldShowButton);
+        };
 
-    const handleScroll = () => {
-        const scrollTop =
-            document.documentElement.scrollTop || document.body.scrollTop;
-        const shouldShowButton = scrollTop > 100; // Adjust this value as needed
-        setShowScrollButton(shouldShowButton);
-    };
+        const handleContentVisibility = () => {
+            const listHeight = document.querySelector(
+                `.${classes.table}`
+            ).offsetHeight;
+            const windowHeight = window.innerHeight;
+            setShowScrollButton(listHeight >= windowHeight);
+        };
 
-    useEffect(() => {
         window.addEventListener("scroll", handleScroll);
+        handleContentVisibility(); // Check initial content visibility
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    };
 
     const handleOrderOptionClick = (option) => {
         props.tableData.current = props.tableData.current
@@ -59,13 +82,6 @@ function AppointmentsList(props) {
                 }
             });
         setSelectedOrder(option);
-    };
-
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
     };
 
     return (
@@ -192,16 +208,14 @@ function AppointmentsList(props) {
                     </div>
                 ))}
             </div>
-            <button
-                className={
-                    showScrollButton
-                        ? classes.scrollToTopButton
-                        : classes.scrollToTopButton + null
-                }
-                onClick={scrollToTop}
-            >
-                ↑
-            </button>
+            {showScrollButton && (
+                <button
+                    className={classes.scrollToTopButton}
+                    onClick={scrollToTop}
+                >
+                    ↑
+                </button>
+            )}
         </>
     );
 }
