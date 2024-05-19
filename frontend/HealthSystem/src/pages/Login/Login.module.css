@@ -43,14 +43,14 @@ button.normal:hover {
 .rememberContainer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    width: 18.5%;
+    justify-content: center;
     margin-top: -1.5rem;
+    margin-left: 6rem;
 }
 
 .remember {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    /* justify-content: flex-end; */
     gap: 0.3rem;
 }
