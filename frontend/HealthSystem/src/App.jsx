@@ -100,6 +100,7 @@ function App() {
                 });
         } else {
             setIsLoggedIn(false);
+            console.log("Logged out");
         }
     };
 

@@ -142,8 +142,8 @@ def create_appointment(request):
                     'time': time
                 }
             )
-            # Remove the reservation after successful creation
-            redis_client.delete(reservation_key)
+            # Remove the reservation after successful creation - maybe not needed because it will be easy to filter
+            # redis_client.delete(reservation_key)
             return JsonResponse({'message': 'Appointment created successfully'}, status=201)
         except ValueError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
@@ -185,7 +185,7 @@ def get_appointments(request, user_id):
 
             # Retrieve appointments from DynamoDB
             response = settings.appointments_table.query(
-                IndexName='user_id-index',  # Assuming a secondary index on user_id
+                IndexName='user_id-index',  # Assuming a secondary index on user_id - not sure if it will work
                 KeyConditionExpression=boto3.dynamodb.conditions.Key('user_id').eq(user_id)
             )
             appointments = response.get('Items', [])
