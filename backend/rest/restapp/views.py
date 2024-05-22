@@ -105,48 +105,63 @@ def login(request):
 # Initialize Redis client
 redis_client = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
+
 @csrf_exempt
 def create_appointment(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user_id = data.get('user_id')
-            speciality = data.get('speciality')
+            patient = data.get('patient')
+            specialty = data.get('specialty')
             doctor = data.get('doctor')
-            date = data.get('date')
-            time = data.get('time')
-            reservation_key = f"{date}_{time}_{doctor}"
+            datetime = data.get('datetime')
+            paid = data.get('paid', False)
 
-            # Check if the slot is reserved
-            if redis_client.exists(reservation_key):
-                return JsonResponse({'error': 'Slot already reserved'}, status=409)
-
-            # Reserve the slot for 60 seconds
-            redis_client.setex(reservation_key, 60, user_id)
-
-            # Validate the user exists
-            try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                return JsonResponse({'error': 'User does not exist'}, status=404)
-
-            # Create appointment in DynamoDB
             appointment_id = str(uuid.uuid4())
-            settings.appointments_table.put_item(
+            appointments.put_item(
                 Item={
                     'appointment_id': appointment_id,
-                    'user_id': user_id,
-                    'speciality': speciality,
+                    'specialty': specialty,
                     'doctor': doctor,
-                    'date': date,
-                    'time': time
+                    'datetime': datetime,
+                    'paid': paid,
+                    'patient': patient
                 }
             )
-            # Remove the reservation after successful creation - maybe not needed because it will be easy to filter
-            # redis_client.delete(reservation_key)
+
+            # Update availability
+            update_availability(doctor, datetime)
+
             return JsonResponse({'message': 'Appointment created successfully'}, status=201)
         except ValueError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+def update_availability(doctor, datetime):
+    date, time = datetime.split()
+    availability.update_item(
+        Key={'doctor': doctor},
+        UpdateExpression='SET #times.#time = list_append(if_not_exists(#times.#time, :empty_list), :date)',
+        ExpressionAttributeNames={
+            '#times': 'times',
+            '#time': time
+        },
+        ExpressionAttributeValues={
+            ':date': [date],
+            ':empty_list': []
+        }
+    )
+
+@csrf_exempt
+def get_appointments(request):
+    if request.method == 'GET':
+        try:
+            response = appointments.scan()
+            appointments = response.get('Items', [])
+            return JsonResponse({'appointments': appointments}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
@@ -155,18 +170,15 @@ def reserve_appointment_slot(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            user_id = data.get('user_id')
             doctor = data.get('doctor')
             date = data.get('date')
             time = data.get('time')
             reservation_key = f"{date}_{time}_{doctor}"
 
-            # Check if the slot is already reserved
             if redis_client.exists(reservation_key):
                 return JsonResponse({'error': 'Slot already reserved'}, status=409)
 
-            # Reserve the slot for 60 seconds
-            redis_client.setex(reservation_key, 60, user_id)
+            redis_client.setex(reservation_key, 60, 'reserved')
             return JsonResponse({'message': 'Slot reserved for 60 seconds'}, status=200)
         except ValueError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
@@ -174,23 +186,75 @@ def reserve_appointment_slot(request):
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @csrf_exempt
-def get_appointments(request, user_id):
+def get_user_appointments(request, email):
     if request.method == 'GET':
         try:
-            # Validate the user exists
-            try:
-                user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                return JsonResponse({'error': 'User does not exist'}, status=404)
-
-            # Retrieve appointments from DynamoDB
-            response = settings.appointments_table.query(
-                IndexName='user_id-index',  # Assuming a secondary index on user_id - not sure if it will work
-                KeyConditionExpression=boto3.dynamodb.conditions.Key('user_id').eq(user_id)
+            # Query DynamoDB to get appointments for the given email (patient)
+            response = appointments.scan(
+                FilterExpression=boto3.dynamodb.conditions.Attr('patient').eq(email)
             )
             appointments = response.get('Items', [])
             return JsonResponse({'appointments': appointments}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+@csrf_exempt
+def availability(request):
+    if request.method == 'GET':
+        try:
+            response = availability.scan()
+            appointments = response.get('Items', [])
+            availability = {}
+
+            for appointment in appointments:
+                doctor = appointment['doctor']
+                datetime = appointment['datetime']
+                date, time = datetime.split()
+
+                if doctor not in availability:
+                    availability[doctor] = {}
+
+                if date not in availability[doctor]:
+                    availability[doctor][date] = []
+
+                availability[doctor][date].append(time)
+
+            return JsonResponse({'availability': availability}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+@csrf_exempt
+def pay_for_appointment(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            appointment_id = data.get('appointment_id')
+            
+            response = appointments.get_item(Key={'appointment_id': appointment_id})
+            appointment = response.get('Item')
+
+            if appointment:
+                doctor = appointment['doctor']
+                datetime = appointment['datetime']
+
+                # Update appointment to mark as paid
+                appointments.update_item(
+                    Key={'appointment_id': appointment_id},
+                    UpdateExpression='SET paid = :paid',
+                    ExpressionAttributeValues={':paid': True}
+                )
+
+                # Update availability
+                update_availability(doctor, datetime)
+
+                return JsonResponse({'message': 'Payment successful, availability updated'}, status=200)
+            else:
+                return JsonResponse({'error': 'Appointment not found'}, status=404)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)

@@ -16,12 +16,11 @@ from boto3.session import Session
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'p0f880imtz!jfej(z%3#9r3b@1yo*=m+1m@cx3=&bvddumheoh'
+# SECRET_KEY = 'p0f880imtz!jfej(z%3#9r3b@1yo*=m+1m@cx3=&bvddumheoh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -126,17 +125,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_REGION_NAME = 'your-region'  # e.g., 'us-west-2'
+AWS_REGION_NAME = 'us-east-1'
+STEP_FUNCTION_ARN = 'arn:aws:states:us-east-1:577650631867:stateMachine:MyStateMachine-9vppztgd6'
 
 # Initialize a session using Boto3
 session = Session(
+    region_name=AWS_REGION_NAME,
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-    region_name=AWS_REGION_NAME
 )
 
 # DynamoDB Configuration
@@ -144,7 +142,7 @@ dynamodb = session.resource('dynamodb')
 appointments_table = dynamodb.Table('Appointments')
 
 # ElastiCache Redis Configuration
-REDIS_HOST = 'your-elasticache-endpoint'  # Find this in your ElastiCache dashboard
+REDIS_HOST = 'healthsystem-ncyimp.serverless.use1.cache.amazonaws.com:6379'
 REDIS_PORT = 6379
 REDIS_DB = 0
 
