@@ -4,15 +4,14 @@ from django.http import HttpResponse,  JsonResponse
 import base64, re, json, hmac, hashlib, os
 from .models import User
 
-# TODO ------------
+# AWS
 import json
 import boto3
 import redis
 import uuid
 from django.conf import settings
-# ------------
 
-# generates secret key to be used in all encryptions
+# LOGIN
 secret_key = os.urandom(64)
 
 def decode_base64(data, altchars=b'+/'):
@@ -98,49 +97,22 @@ def login(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
     
-
-
-# TODO ------------
-
-# Initialize Redis client
+# AWS 
 redis_client = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
-
-
-# @csrf_exempt
-# def create_appointment(request):
-#     if request.method == 'POST':
-#         try:
-#             data = json.loads(request.body)
-#             patient = data.get('patient')
-#             specialty = data.get('specialty')
-#             doctor = data.get('doctor')
-#             datetime = data.get('datetime')
-#             paid = data.get('paid', False)
-
-#             appointment_id = str(uuid.uuid4())
-#             appointments.put_item(
-#                 Item={
-#                     'appointment_id': appointment_id,
-#                     'specialty': specialty,
-#                     'doctor': doctor,
-#                     'datetime': datetime,
-#                     'paid': paid,
-#                     'patient': patient
-#                 }
-#             )
-
-#             # Update availability
-#             update_availability(doctor, datetime)
-
-#             return JsonResponse({'message': 'Appointment created successfully'}, status=201)
-#         except ValueError:
-#             return JsonResponse({'error': 'Invalid JSON'}, status=400)
-#     else:
-#         return JsonResponse({'error': 'Method not allowed'}, status=405)
+dynamodb = boto3.resource('dynamodb', region_name=settings.AWS_REGION_NAME)
+appointments_table = dynamodb.Table('appointments')
+availability_table = dynamodb.Table('availability')
 
 stepfunctions_client = boto3.client(
     'stepfunctions',
-    region_name=settings.AWS_REGION,
+    region_name=settings.AWS_REGION_NAME,
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+)
+
+lambda_client = boto3.client(
+    'lambda',
+    region_name=settings.AWS_REGION_NAME,
     aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
     aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
 )
@@ -163,26 +135,11 @@ def create_appointment(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-def update_availability(doctor, datetime):
-    date, time = datetime.split()
-    availability.update_item(
-        Key={'doctor': doctor},
-        UpdateExpression='SET #times.#time = list_append(if_not_exists(#times.#time, :empty_list), :date)',
-        ExpressionAttributeNames={
-            '#times': 'times',
-            '#time': time
-        },
-        ExpressionAttributeValues={
-            ':date': [date],
-            ':empty_list': []
-        }
-    )
-
 @csrf_exempt
 def get_appointments(request):
     if request.method == 'GET':
         try:
-            response = appointments.scan()
+            response = appointments_table.scan()
             appointments = response.get('Items', [])
             return JsonResponse({'appointments': appointments}, status=200)
         except Exception as e:
@@ -214,8 +171,7 @@ def reserve_appointment_slot(request):
 def get_user_appointments(request, email):
     if request.method == 'GET':
         try:
-            # Query DynamoDB to get appointments for the given email (patient)
-            response = appointments.scan(
+            response = appointments_table.scan(
                 FilterExpression=boto3.dynamodb.conditions.Attr('patient').eq(email)
             )
             appointments = response.get('Items', [])
@@ -225,11 +181,12 @@ def get_user_appointments(request, email):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+
 @csrf_exempt
 def availability(request):
     if request.method == 'GET':
         try:
-            response = availability.scan()
+            response = availability_table.scan()
             appointments = response.get('Items', [])
             availability = {}
 
@@ -251,6 +208,7 @@ def availability(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
     
 @csrf_exempt
 def pay_for_appointment(request):
@@ -259,7 +217,7 @@ def pay_for_appointment(request):
             data = json.loads(request.body)
             appointment_id = data.get('appointment_id')
             
-            response = appointments.get_item(Key={'appointment_id': appointment_id})
+            response = appointments_table.get_item(Key={'appointment_id': appointment_id})
             appointment = response.get('Item')
 
             if appointment:
@@ -267,14 +225,22 @@ def pay_for_appointment(request):
                 datetime = appointment['datetime']
 
                 # Update appointment to mark as paid
-                appointments.update_item(
+                appointments_table.update_item(
                     Key={'appointment_id': appointment_id},
                     UpdateExpression='SET paid = :paid',
                     ExpressionAttributeValues={':paid': True}
                 )
 
-                # Update availability
-                update_availability(doctor, datetime)
+                # Invoke Lambda function to update availability
+                lambda_payload = {
+                    'doctor': doctor,
+                    'datetime': datetime
+                }
+                lambda_response = lambda_client.invoke(
+                    FunctionName=settings.AWS_LAMBDA_FUNCTION_NAME,
+                    InvocationType='Event',
+                    Payload=json.dumps(lambda_payload)
+                )
 
                 return JsonResponse({'message': 'Payment successful, availability updated'}, status=200)
             else:
