@@ -128,7 +128,8 @@ STATIC_URL = '/static/'
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_REGION_NAME = 'us-east-1'
-STEP_FUNCTION_ARN = 'arn:aws:states:us-east-1:577650631867:stateMachine:MyStateMachine-9vppztgd6'
+STEP_FUNCTION_ARN = os.getenv('STEP_FUNCTION_ARN')
+AWS_LAMBDA_FUNCTION_NAME = os.getenv('AWS_LAMBDA_FUNCTION_NAME')
 
 # Initialize a session using Boto3
 session = Session(
@@ -142,7 +143,7 @@ dynamodb = session.resource('dynamodb')
 appointments_table = dynamodb.Table('Appointments')
 
 # ElastiCache Redis Configuration
-REDIS_HOST = 'healthsystem-ncyimp.serverless.use1.cache.amazonaws.com:6379'
+REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = 6379
 REDIS_DB = 0
 
