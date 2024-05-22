@@ -106,35 +106,60 @@ def login(request):
 redis_client = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 
+# @csrf_exempt
+# def create_appointment(request):
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body)
+#             patient = data.get('patient')
+#             specialty = data.get('specialty')
+#             doctor = data.get('doctor')
+#             datetime = data.get('datetime')
+#             paid = data.get('paid', False)
+
+#             appointment_id = str(uuid.uuid4())
+#             appointments.put_item(
+#                 Item={
+#                     'appointment_id': appointment_id,
+#                     'specialty': specialty,
+#                     'doctor': doctor,
+#                     'datetime': datetime,
+#                     'paid': paid,
+#                     'patient': patient
+#                 }
+#             )
+
+#             # Update availability
+#             update_availability(doctor, datetime)
+
+#             return JsonResponse({'message': 'Appointment created successfully'}, status=201)
+#         except ValueError:
+#             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+#     else:
+#         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+stepfunctions_client = boto3.client(
+    'stepfunctions',
+    region_name=settings.AWS_REGION,
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+)
+
 @csrf_exempt
 def create_appointment(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            patient = data.get('patient')
-            specialty = data.get('specialty')
-            doctor = data.get('doctor')
-            datetime = data.get('datetime')
-            paid = data.get('paid', False)
-
-            appointment_id = str(uuid.uuid4())
-            appointments.put_item(
-                Item={
-                    'appointment_id': appointment_id,
-                    'specialty': specialty,
-                    'doctor': doctor,
-                    'datetime': datetime,
-                    'paid': paid,
-                    'patient': patient
-                }
+            response = stepfunctions_client.start_execution(
+                stateMachineArn=settings.STEP_FUNCTION_ARN,
+                input=json.dumps(data)
             )
-
-            # Update availability
-            update_availability(doctor, datetime)
-
-            return JsonResponse({'message': 'Appointment created successfully'}, status=201)
+            execution_arn = response['executionArn']
+            return JsonResponse({'executionArn': execution_arn}, status=201)
         except ValueError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
