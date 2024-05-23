@@ -25,7 +25,7 @@ SECRET_KEY = 'p0f880imtz!jfej(z%3#9r3b@1yo*=m+1m@cx3=&bvddumheoh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rest.us-east-1.elasticbeanstalk.com', '127.0.0.1', 'localhost', 'healthsystem-env.eba-cz3qp2bn.us-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['rest.us-east-1.elasticbeanstalk.com', '127.0.0.1', 'localhost', 'healthsystem-env.eba-cz3qp2bn.us-east-1.elasticbeanstalk.com', '54.146.27.26']
 
 
 
@@ -127,9 +127,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'staticfiles'),
+    os.path.join(BASE_DIR, 'static/assets'),
 ]
 
 
