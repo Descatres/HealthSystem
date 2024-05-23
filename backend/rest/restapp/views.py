@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse,  JsonResponse
+from django.http import HttpResponse,  JsonResponse, HttpResponseRedirect
 import base64, re, json, hmac, hashlib, os
 from .models import User
 
@@ -8,8 +8,8 @@ from .models import User
 import json
 import boto3
 import redis
-import uuid
 from django.conf import settings
+from functools import wraps
 
 # LOGIN
 secret_key = os.urandom(64)
@@ -21,18 +21,17 @@ def decode_base64(data, altchars=b'+/'):
         data += b'='* (4 - missing_padding)
     return base64.b64decode(data, altchars)
 
+def base64url_decode(input):
+    input = input.encode('ascii')
+    padding = 4 - (len(input) % 4)
+    input += b'=' * padding
+    return base64.urlsafe_b64decode(input).decode('utf-8')
+
 def base64url_encode(input):
     stringAsBytes = input.encode('ascii')
     stringAsBase64 = base64.urlsafe_b64encode(stringAsBytes).decode('utf-8').replace('=','')
     return stringAsBase64 
 
-"""
-    Parameters: expiration timestamp, user ID, userrole
-    
-    Creates a "header" object with some conf, a "payload" object containing user info
-    Generates a signature based on header & payload, using a secret key.
-    Returns a base64 encoded triple-token with header . payload . signature
-"""
 def jwt_creator(expiration, userid, userrole):
     header = {
         "alg": "HS256",
@@ -49,16 +48,11 @@ def jwt_creator(expiration, userid, userrole):
     token = total_params + '.' + str(base64url_encode(signature))
     return token
 
-"""
-    Parameters: JWT token, secret key
-    Returns: true if jwt token was created by this secret key (verify signature)
-"""
 def jwt_verify(token, sk):
     client_signature = decode_base64(token.split('.')[2].encode())
     params = token.split('.')[0] + '.' + token.split('.')[1]
     
     aux_signature = hmac.new(sk, params.encode(), hashlib.sha1).hexdigest()
-
     return hmac.compare_digest(aux_signature.encode(), client_signature)
 
 def authenticate(email, password):
@@ -97,6 +91,20 @@ def login(request):
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
     
+def login_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        token = request.COOKIES.get('jwt')
+        if token and jwt_verify(token, secret_key):
+            return view_func(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect('/login/')
+    return _wrapped_view    
+
+@csrf_exempt
+def home(request):
+    return render(request, 'index.html')
+
 # AWS 
 redis_client = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 dynamodb = boto3.resource('dynamodb', region_name=settings.AWS_REGION_NAME)
@@ -168,6 +176,7 @@ def reserve_appointment_slot(request):
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @csrf_exempt
+@login_required
 def get_user_appointments(request, email):
     if request.method == 'GET':
         try:
