@@ -93,16 +93,19 @@ function App() {
 
     const handleLogin = (email, password) => {
         if (!isLoggedIn) {
-            fetch("http://localhost:8000/login/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                }),
-            })
+            fetch(
+                "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/login/",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                    }),
+                }
+            )
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.token) {

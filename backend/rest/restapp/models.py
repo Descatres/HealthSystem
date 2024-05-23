@@ -11,4 +11,4 @@ class User(models.Model):
         self.save()
 
     def check_password(self, raw_password):
-        return self.password == hashlib.sha256(raw_password.encode('utf-8')).hexdigest()
+        return self.password == raw_password

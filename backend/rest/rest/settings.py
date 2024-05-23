@@ -25,9 +25,7 @@ SECRET_KEY = 'p0f880imtz!jfej(z%3#9r3b@1yo*=m+1m@cx3=&bvddumheoh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rest.us-east-1.elasticbeanstalk.com', '127.0.0.1', 'localhost', 'healthsystem-env.eba-cz3qp2bn.us-east-1.elasticbeanstalk.com', '54.146.27.26']
-
-
+ALLOWED_HOSTS = ['rest.us-east-1.elasticbeanstalk.com', '127.0.0.1', 'localhost', 'healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com', '54.146.27.26']
 
 # Application definition
 
@@ -84,10 +82,15 @@ WSGI_APPLICATION = 'rest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'healthsystem',
+        'USER': 'username',
+        'PASSWORD': 'password',
+        'HOST': 'database-1.cxotvy7ezzpo.us-east-1.rds.amazonaws.com',  # Or the hostname where your MySQL server is running
+        'PORT': '3306',       # MySQL default port
     }
 }
+
 
 
 # Password validation
