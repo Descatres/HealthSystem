@@ -25,7 +25,7 @@ SECRET_KEY = 'p0f880imtz!jfej(z%3#9r3b@1yo*=m+1m@cx3=&bvddumheoh'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rest.us-east-1.elasticbeanstalk.com', '127.0.0.1', 'localhost', 'healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com', '54.146.27.26']
+ALLOWED_HOSTS = ['rest.us-east-1.elasticbeanstalk.com', '127.0.0.1', 'localhost', 'healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com', '54.146.27.26', '44.223.237.141']
 
 # Application definition
 
@@ -50,6 +50,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 

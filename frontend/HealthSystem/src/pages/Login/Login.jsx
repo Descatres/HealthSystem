@@ -10,7 +10,7 @@ function Login(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(props.isLoggedIn);
+        // console.log(props.isLoggedIn);
         if (props.isLoggedIn) {
             navigate("/");
         }

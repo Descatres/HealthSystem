@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import classes from "./AppointmentsList.module.css";
 import Card from "../Card/Card";
 import Button from "../Buttons/Button";
-import Payment from "../Modals/CreateAppointment/Payment/Payment";
-// import { appointmentDetailsContext } from "../../../contexts/appointment-details";
-// import { ReloadHomepageContext } from "../../../contexts/reload-pages";
 
 const ORDER_OPTIONS = [
     "Default",
@@ -15,10 +12,9 @@ const ORDER_OPTIONS = [
 
 function AppointmentsList(props) {
     const [selectedOrder, setSelectedOrder] = useState("Default");
-    const [identifier, setIdentifier] = useState(0);
-    const [appointmentInfo, setappointmentInfo] = useState({});
     const [showScrollButton, setShowScrollButton] = useState(false);
 
+    // scroll to top
     useEffect(() => {
         const handleScroll = () => {
             const scrollPosition =
@@ -66,21 +62,37 @@ function AppointmentsList(props) {
         });
     };
 
+    // const handleOrderOptionClick = (option) => {
+    //     props.tableData.current = props.tableData.current
+    //         .filter((row) => row.organizer.toLowerCase().includes(""))
+    //         .sort((a, b) => {
+    //             if (option === "Ascending Date") {
+    //                 return new Date(a.date) - new Date(b.date);
+    //             } else if (option === "Appointment") {
+    //                 return a.name.localeCompare(b.name);
+    //             } else if (option === "Descending Date") {
+    //                 return new Date(b.date) - new Date(a.date);
+    //             } else {
+    //                 // use the original values - Descending dates without the cancelled ones
+    //                 return a.id - b.id;
+    //             }
+    //         });
+    //     setSelectedOrder(option);
+    // };
+
     const handleOrderOptionClick = (option) => {
-        props.tableData.current = props.tableData.current
-            .filter((row) => row.organizer.toLowerCase().includes(""))
-            .sort((a, b) => {
-                if (option === "Ascending Date") {
-                    return new Date(a.date) - new Date(b.date);
-                } else if (option === "Appointment") {
-                    return a.name.localeCompare(b.name);
-                } else if (option === "Descending Date") {
-                    return new Date(b.date) - new Date(a.date);
-                } else {
-                    // use the original values - Descending dates without the cancelled ones
-                    return a.id - b.id;
-                }
-            });
+        const sortedData = [...props.tableData].sort((a, b) => {
+            if (option === "Ascending Date") {
+                return new Date(a.date) - new Date(b.date);
+            } else if (option === "Appointment") {
+                return a.name.localeCompare(b.name);
+            } else if (option === "Descending Date") {
+                return new Date(b.date) - new Date(a.date);
+            } else {
+                return a.id - b.id;
+            }
+        });
+        props.setTableData(sortedData);
         setSelectedOrder(option);
     };
 
@@ -161,7 +173,7 @@ function AppointmentsList(props) {
                         </div>
                     </div>
                 </div>
-                {props.tableData.current?.map((row) => (
+                {props.tableData.map((row) => (
                     <div key={row.id} className={classes.tableRow}>
                         <div
                             className={
@@ -199,7 +211,7 @@ function AppointmentsList(props) {
                                 <Button text={row.state} disabled={true} />
                             ) : (
                                 <Button
-                                    text={row.state}
+                                    text={row.state} // TODO verify date and time and if it is paid or not and change the button text accordingly
                                     type="secondary"
                                     disabled={true}
                                 />

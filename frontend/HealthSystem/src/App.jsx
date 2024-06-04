@@ -8,46 +8,56 @@ import Login from "./pages/Login/Login";
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [email, setEmail] = useState("");
+
+    const [appointments, setAppointments] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
 
     // TODO
 
     // async function reserveAppointmentSlot(reservationData) {
-    //     const response = await fetch('http://localhost:8000/reserve/', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify(reservationData),
-    //     });
-
-    //     const data = await response.json();
-    //     if (response.ok) {
-    //       console.log('Slot reserved successfully:', data);
-    //     } else {
-    //       console.error('Error reserving slot:', data);
-    //     }
-    //   }
-
-    //   async function createAppointment(appointmentData) {
-    //     const response = await fetch('http://localhost:8000/appointments/', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify(appointmentData),
-    //     });
-
-    //     const data = await response.json();
-    //     if (response.ok) {
-    //       console.log('Appointment created successfully:', data);
-    //     } else {
-    //       console.error('Error creating appointment:', data);
-    //     }
-    //   }
-
-    // async function getAppointments(userId) {
     //     const response = await fetch(
-    //         `http://localhost:8000/appointments/${userId}/`,
+    //         "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/reserve/",
+    //         {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(reservationData),
+    //         }
+    //     );
+
+    //     const data = await response.json();
+    //     if (response.ok) {
+    //         console.log("Slot reserved successfully:", data);
+    //     } else {
+    //         console.error("Error reserving slot:", data);
+    //     }
+    // }
+
+    // async function createAppointment(appointmentData) {
+    //     const response = await fetch(
+    //         "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/create/",
+    //         {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(appointmentData),
+    //         }
+    //     );
+
+    //     const data = await response.json();
+    //     if (response.ok) {
+    //         console.log("Appointment created successfully:", data);
+    //     } else {
+    //         console.error("Error creating appointment:", data);
+    //     }
+    // }
+
+    // async function getAppointments(email) {
+    //     const response = await fetch(
+    //         `http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/${email}/`,
     //         {
     //             method: "GET",
     //         }
@@ -61,16 +71,28 @@ function App() {
     //     }
     // }
 
-    //   const reservationData = {
+    // const reservationData = {
     //     user_id: 1,
-    //     doctor: 'Dr. Smith',
-    //     date: '2024-05-20',
-    //     time: '10:00',
-    //   }; // todo: get this data from the form
-    //   reserveAppointmentSlot(reservationData).then(() => {
-    //     const appointmentData = { ...reservationData, speciality: 'Cardiology' };
+    //     doctor: "Dr. Smith",
+    //     date: "2024-05-20",
+    //     time: "10:00",
+    // }; // todo: get this data from the form
+    // reserveAppointmentSlot(reservationData).then(() => {
+    //     const appointmentData = {
+    //         ...reservationData,
+    //         speciality: "Cardiology",
+    //     };
     //     createAppointment(appointmentData);
-    //   });
+    // });
+
+    useEffect(() => {
+        // Check if the user is already logged in
+        const storedEmail = localStorage.getItem("email");
+        if (storedEmail) {
+            setEmail(storedEmail);
+            setIsLoggedIn(true);
+        }
+    }, []);
 
     useEffect(() => {
         const checkLoginStatus = () => {
@@ -93,6 +115,7 @@ function App() {
 
     const handleLogin = (email, password) => {
         if (!isLoggedIn) {
+            setEmail(email);
             fetch(
                 "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/login/",
                 {
@@ -111,7 +134,8 @@ function App() {
                     if (data.token) {
                         setIsLoggedIn(true);
                         setLoginTimestamp();
-                        console.log("Logged in", data.token);
+                        localStorage.setItem("email", email);
+                        // console.log("Logged in", data);
                     } else {
                         setIsLoggedIn(false);
                         console.log("Failed to log in", data.error);
@@ -123,11 +147,34 @@ function App() {
                 });
         } else {
             setIsLoggedIn(false);
+            localStorage.removeItem("email");
             localStorage.removeItem("loginTimestamp");
             console.log("Logged out");
         }
     };
 
+    const fetchAppointments = async (email) => {
+        try {
+            const response = await fetch(
+                `http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/${email}/`,
+                {
+                    method: "GET",
+                }
+            );
+
+            const data = await response.json();
+            if (response.ok) {
+                setAppointments(data);
+                setFilteredData(data);
+            } else {
+                console.error("Error retrieving appointments:", data);
+            }
+        } catch (error) {
+            console.error("Error retrieving appointments:", error);
+        }
+    };
+
+    // -------------------------------------------//
     const handleCreateAppointment = () => {
         setIsCreateModalOpen(!isCreateModalOpen);
     };
@@ -158,12 +205,16 @@ function App() {
                                 setCreateAppointmentModalOpen={
                                     setIsCreateModalOpen
                                 }
+                                email={email}
+                                fetchAppointments={fetchAppointments}
+                                appointments={appointments}
+                                filteredData={filteredData}
                             />
                         }
                     />
 
                     <Route
-                        path="/login"
+                        path="/login/"
                         element={
                             <Login
                                 isLoggedIn={isLoggedIn}

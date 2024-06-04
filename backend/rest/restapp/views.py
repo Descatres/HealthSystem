@@ -98,7 +98,7 @@ def login_required(view_func):
         if token and jwt_verify(token, secret_key):
             return view_func(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect('/login')
+            return HttpResponseRedirect('/login/')
     return _wrapped_view    
 
 @csrf_exempt
