@@ -15,82 +15,93 @@ function App() {
 
     // TODO
 
-    // async function reserveAppointmentSlot(reservationData) {
-    //     const response = await fetch(
-    //         "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/reserve/",
-    //         {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify(reservationData),
-    //         }
-    //     );
+    async function reserveAppointmentSlot(reservationData) {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+            "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/reserve/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                },
+                body: JSON.stringify(reservationData),
+            }
+        );
 
-    //     const data = await response.json();
-    //     if (response.ok) {
-    //         console.log("Slot reserved successfully:", data);
-    //     } else {
-    //         console.error("Error reserving slot:", data);
-    //     }
-    // }
+        const data = await response.json();
+        if (response.ok) {
+            console.log("Slot reserved successfully:", data);
+        } else {
+            console.error("Error reserving slot:", data);
+        }
+    }
 
-    // async function createAppointment(appointmentData) {
-    //     const response = await fetch(
-    //         "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/create/",
-    //         {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify(appointmentData),
-    //         }
-    //     );
+    async function createAppointment(appointmentData) {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+            "http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/create/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                },
+                body: JSON.stringify(appointmentData),
+            }
+        );
 
-    //     const data = await response.json();
-    //     if (response.ok) {
-    //         console.log("Appointment created successfully:", data);
-    //     } else {
-    //         console.error("Error creating appointment:", data);
-    //     }
-    // }
+        const data = await response.json();
+        if (response.ok) {
+            console.log("Appointment created successfully:", data);
+        } else {
+            console.error("Error creating appointment:", data);
+        }
+    }
 
-    // async function getAppointments(email) {
-    //     const response = await fetch(
-    //         `http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/${email}/`,
-    //         {
-    //             method: "GET",
-    //         }
-    //     );
+    async function getAppointments(email) {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+            `http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/${email}/`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+                },
+            }
+        );
 
-    //     const data = await response.json();
-    //     if (response.ok) {
-    //         console.log("Retrieved appointments:", data);
-    //     } else {
-    //         console.error("Error retrieving appointments:", data);
-    //     }
-    // }
+        const data = await response.json();
+        if (response.ok) {
+            console.log("Retrieved appointments:", data);
+        } else {
+            console.error("Error retrieving appointments:", data);
+        }
+    }
 
-    // const reservationData = {
-    //     user_id: 1,
-    //     doctor: "Dr. Smith",
-    //     date: "2024-05-20",
-    //     time: "10:00",
-    // }; // todo: get this data from the form
-    // reserveAppointmentSlot(reservationData).then(() => {
-    //     const appointmentData = {
-    //         ...reservationData,
-    //         speciality: "Cardiology",
-    //     };
-    //     createAppointment(appointmentData);
-    // });
+    const reservationData = {
+        user_id: 1,
+        doctor: "Dr. Smith",
+        date: "2024-05-20",
+        time: "10:00",
+    }; // todo: get this data from the form
+    reserveAppointmentSlot(reservationData).then(() => {
+        const appointmentData = {
+            ...reservationData,
+            speciality: "Cardiology",
+        };
+        createAppointment(appointmentData);
+    });
 
     useEffect(() => {
         // Check if the user is already logged in
         const storedEmail = localStorage.getItem("email");
-        if (storedEmail) {
+        const storedToken = localStorage.getItem("token");
+        if (storedEmail && storedToken) {
             setEmail(storedEmail);
             setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
         }
     }, []);
 
@@ -132,6 +143,8 @@ function App() {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.token) {
+                        // save the token in local storage
+                        localStorage.setItem("token", data.token);
                         setIsLoggedIn(true);
                         setLoginTimestamp();
                         localStorage.setItem("email", email);
@@ -149,16 +162,23 @@ function App() {
             setIsLoggedIn(false);
             localStorage.removeItem("email");
             localStorage.removeItem("loginTimestamp");
+            localStorage.removeItem("token");
             console.log("Logged out");
+            // go to the homepage
+            window.location.href = "/";
         }
     };
 
     const fetchAppointments = async (email) => {
         try {
+            const token = localStorage.getItem("token");
             const response = await fetch(
                 `http://healthsystemv2-env.eba-hnukda6m.us-east-1.elasticbeanstalk.com/appointments/${email}/`,
                 {
                     method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
 
